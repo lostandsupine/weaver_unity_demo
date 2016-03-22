@@ -6,6 +6,7 @@ public class rune_object {
 	public Sprite[] rune_complete_sprite_list;
 	private int[] path_list;
 	private int[,] position_list;
+	private int[,] spell_list;
 	public GameObject[] rune_obj_list;
 
 	private int flip(int direction_in){
@@ -32,6 +33,7 @@ public class rune_object {
 	public int current_incomplete_rune;
 	public bool[] rune_keys_down;
 	public bool[] rune_keys_pressed;
+	private bool show_runes;
 
 	public rune_object(int[] path_list_in,Sprite[] rune_start_list,Sprite[,] rune_body_array,Sprite[] rune_end_list,
 		Sprite[] rune_complete_start_list,Sprite[,] rune_complete_body_array,Sprite[] rune_complete_end_list){
@@ -41,6 +43,7 @@ public class rune_object {
 		this.rune_complete_sprite_list = new Sprite[this.path_list.Length+1];
 		this.position_list = new int[this.path_list.Length+1,2];
 		this.rune_obj_list = new GameObject[this.path_list.Length+1];
+		this.show_runes = false;
 
 		this.rune_sprite_list[0] = rune_start_list[path_list_in[0]];
 		this.rune_complete_sprite_list[0] = rune_complete_start_list[path_list_in[0]];
@@ -111,7 +114,20 @@ public class rune_object {
 			this.rune_obj_list[i].transform.position = new Vector3 (-9+this.position_list[i,0],1.1F, 13+this.position_list[i,1]);
 			this.rune_obj_list[i].transform.localScale = new Vector3 (5, 5, 5);
 		}
-
+	}
+	public void enable_rune_tiles(){
+		Debug.Log ("enable rune");
+		for (int i = 0; i < this.rune_obj_list.Length; i++){
+			this.rune_obj_list [i].GetComponent<SpriteRenderer> ().enabled = this.show_runes;
+		}
+	}
+	public void showhide_rune_tiles(bool showhide){
+		Debug.Log ("showhide tiles");
+		this.show_runes = showhide;
+	}
+	public bool is_showing(){
+		Debug.Log ("is showing?");
+		return this.show_runes;
 	}
 	public void move_rune(Vector3 direction){
 		for (int i = 0; i < this.rune_obj_list.Length; i++){
@@ -120,16 +136,18 @@ public class rune_object {
 	}
 	public void swap_rune(bool p_complete,int i){
 		if (p_complete){
-			//Debug.Log (this.rune_obj_list [i]);
+			Debug.Log ("swapping rune");
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_complete_sprite_list[i];
 		} else {
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];					
 		}
 	}
 	public bool check_rune(int i, int dir){
+		Debug.Log ("checking rune");
 		return (this.path_list[i-1] == dir);
 	}
 	public void mark_rune(int dir){
+		Debug.Log ("marking rune");
 		if (check_rune (this.current_incomplete_rune, dir)) {
 			swap_rune (true, this.current_incomplete_rune);
 			this.current_incomplete_rune++;
@@ -139,6 +157,7 @@ public class rune_object {
 		}
 	}
 	public void reset_rune(){
+		Debug.Log ("resetting rune");
 		this.current_incomplete_rune = 1;
 		for (int i = 1; i < this.rune_obj_list.Length; i++) {
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];
@@ -158,7 +177,11 @@ public class rune_manager : MonoBehaviour {
 	public Sprite[,] rune_body_array;
 	public Sprite[,] rune_complete_body_array;
 	public rune_object the_rune;
+	public rune_object the_rune2;
 	private float num_rune_keys_pressed = 0;
+
+	public rune_object[] spell_list;
+	public int current_spell;
 
 	// Use this for initialization
 	void Start () {
@@ -190,12 +213,24 @@ public class rune_manager : MonoBehaviour {
 		rune_complete_body_array[3,1] = rune_complete_body_list[10];
 		rune_complete_body_array[3,2] = rune_complete_body_list[11];
 
-		the_rune = new rune_object(new int[]{0,3,3,2,3,0,0,1,0,0,0,3,0,3,0,3,3,2},rune_start_list,rune_body_array,rune_end_list,
+		spell_list = new rune_object[2];
+		spell_list [0] = new rune_object(new int[]{0,3,3,2,3,0,0,1,0,0,0,3,0,3,0,3,3,2},rune_start_list,rune_body_array,rune_end_list,
 			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
-		//Debug.Log (the_rune.get_path()[1]);
-		the_rune.make_rune_tiles();
+		spell_list [0].make_rune_tiles();
+		spell_list [0].showhide_rune_tiles (true);
+		spell_list [0].enable_rune_tiles ();
+		spell_list [0].swap_rune(true,0);
 
-		the_rune.swap_rune(true,0);
+		//the_rune2 = new rune_object(new int[]{3,3,3,0,3,3,0,3,0,3,2,3,0,0,1,1,0,3},rune_start_list,rune_body_array,rune_end_list,
+		//	rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
+		//the_rune2.make_rune_tiles();
+		//the_rune2.showhide_rune_tiles (false);
+		//the_rune2.enable_rune_tiles ();
+		//the_rune2.swap_rune(true,0);
+
+		current_spell = 0;
+		//spell_list [0] = the_rune;
+		//spell_list [1] = the_rune2;
 
 	}
 	
@@ -205,63 +240,83 @@ public class rune_manager : MonoBehaviour {
 		// Left
 		if((Input.GetKey(KeyCode.LeftArrow)))
 		{
-			the_rune.move_rune((Vector3.left* velocity) * Time.deltaTime);
+			spell_list [0].move_rune((Vector3.left* velocity) * Time.deltaTime);
 		}
 		// Right
 		if((Input.GetKey(KeyCode.RightArrow)))
 		{
-			the_rune.move_rune((Vector3.right* velocity) * Time.deltaTime);
+			spell_list [0].move_rune((Vector3.right* velocity) * Time.deltaTime);
 		}
 		// Up
 		if((Input.GetKey(KeyCode.UpArrow)))
 		{
-			the_rune.move_rune((Vector3.up* velocity) * Time.deltaTime);
+			spell_list [0].move_rune((Vector3.up* velocity) * Time.deltaTime);
 		}
 		// Down
 		if(Input.GetKey(KeyCode.DownArrow))
 		{
-			the_rune.move_rune((Vector3.down* velocity) * Time.deltaTime);
+			spell_list [0].move_rune((Vector3.down* velocity) * Time.deltaTime);
 		}
 
 		if (Input.GetKey (KeyCode.S)) {
-			the_rune.rune_keys_down [0] = true;
-		} else if (the_rune.rune_keys_down [0]) {
-			the_rune.rune_keys_down [0] = false;
-			the_rune.rune_keys_pressed [0] = true;
+			spell_list [0].rune_keys_down [0] = true;
+		} else if (spell_list [0].rune_keys_down [0]) {
+			spell_list [0].rune_keys_down [0] = false;
+			spell_list [0].rune_keys_pressed [0] = true;
 		}
 		if (Input.GetKey (KeyCode.A)) {
-			the_rune.rune_keys_down [1] = true;
-		}else if (the_rune.rune_keys_down [1]) {
-			the_rune.rune_keys_down [1] = false;
-			the_rune.rune_keys_pressed [1] = true;
+			spell_list [0].rune_keys_down [1] = true;
+		}else if (spell_list [0].rune_keys_down [1]) {
+			spell_list [0].rune_keys_down [1] = false;
+			spell_list [0].rune_keys_pressed [1] = true;
 		}
 		if (Input.GetKey (KeyCode.W)) {
-			the_rune.rune_keys_down [2] = true;
-		}else if (the_rune.rune_keys_down [2]) {
-			the_rune.rune_keys_down [2] = false;
-			the_rune.rune_keys_pressed [2] = true;
+			spell_list [0].rune_keys_down [2] = true;
+		}else if (spell_list [0].rune_keys_down [2]) {
+			spell_list [0].rune_keys_down [2] = false;
+			spell_list [0].rune_keys_pressed [2] = true;
 		}
 		if (Input.GetKey (KeyCode.D)) {
-			the_rune.rune_keys_down [3] = true;
-		}else if (the_rune.rune_keys_down [3]) {
-			the_rune.rune_keys_down [3] = false;
-			the_rune.rune_keys_pressed [3] = true;
+			spell_list [0].rune_keys_down [3] = true;
+		}else if (spell_list [0].rune_keys_down [3]) {
+			spell_list [0].rune_keys_down [3] = false;
+			spell_list [0].rune_keys_pressed [3] = true;
 		}
 
 		num_rune_keys_pressed = 0;
 		for (float i = 0; i < 4; i++) {
-			if (the_rune.rune_keys_pressed [(int)i]) {
+			if (spell_list [0].rune_keys_pressed [(int)i]) {
 				num_rune_keys_pressed = num_rune_keys_pressed + Mathf.Pow (10f, i);
-				the_rune.rune_keys_pressed [(int)i] = false;
+				spell_list [0].rune_keys_pressed [(int)i] = false;
 			}
 		}
 		//Debug.Log (num_rune_keys_pressed);
 		if (1f == num_rune_keys_pressed | 10f == num_rune_keys_pressed | 100f == num_rune_keys_pressed | 1000f == num_rune_keys_pressed) {
-			the_rune.mark_rune ((int)Mathf.Log10(num_rune_keys_pressed));
+			spell_list [0].mark_rune ((int)Mathf.Log10(num_rune_keys_pressed));
 		}
+		if (Input.GetKey(KeyCode.Alpha1)){
+			spell_list [current_spell].showhide_rune_tiles (false);
+			spell_list [current_spell].enable_rune_tiles ();
 
+			current_spell = 0;
+			spell_list [current_spell].showhide_rune_tiles (true);
+			spell_list [current_spell].enable_rune_tiles ();
+		}
+		if (Input.GetKey(KeyCode.Alpha2)){
+			spell_list [current_spell].showhide_rune_tiles (false);
+			spell_list [current_spell].enable_rune_tiles ();
+
+			current_spell = 1;
+			spell_list [current_spell].showhide_rune_tiles (true);
+			spell_list [current_spell].enable_rune_tiles ();
+		}
 		if (Input.GetKey (KeyCode.Escape)) {
-			the_rune.reset_rune ();
+			spell_list [0].reset_rune ();
+		}
+		if (Input.GetKey (KeyCode.Space)) {
+			Debug.Log ("space hit!");
+			spell_list [0].showhide_rune_tiles (!spell_list[0].is_showing ());
+			spell_list [0].enable_rune_tiles ();
 		}
 	}
 }
