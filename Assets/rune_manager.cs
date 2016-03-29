@@ -34,6 +34,8 @@ public class rune_object {
 	public bool[] rune_keys_down;
 	public bool[] rune_keys_pressed;
 	private bool show_runes;
+	private float degrade_time;
+	private bool completed;
 
 	public rune_object(int[] path_list_in,Sprite[] rune_start_list,Sprite[,] rune_body_array,Sprite[] rune_end_list,
 		Sprite[] rune_complete_start_list,Sprite[,] rune_complete_body_array,Sprite[] rune_complete_end_list){
@@ -51,6 +53,8 @@ public class rune_object {
 		this.position_list[0,1] = 0;
 
 		this.current_incomplete_rune = 1;
+		this.degrade_time = 2f;
+		this.completed = false;
 
 		this.rune_keys_down = new bool[4];
 		this.rune_keys_pressed = new bool[4];
@@ -96,6 +100,9 @@ public class rune_object {
 	public int[] get_path(){
 		return this.path_list;
 	}
+	public bool get_completed(){
+		return this.completed;
+	}
 	public void make_rune_tiles(){
 		for (int i = 0; i < this.rune_sprite_list.Length;  i++){
 			//var gameObject = new GameObject("rune_tile");
@@ -136,24 +143,51 @@ public class rune_object {
 	}
 	public void swap_rune(bool p_complete,int i){
 		if (p_complete){
-			Debug.Log ("swapping rune");
+			//Debug.Log ("swapping rune");
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_complete_sprite_list[i];
 		} else {
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];					
 		}
 	}
 	public bool check_rune(int i, int dir){
-		Debug.Log ("checking rune");
+		//Debug.Log ("checking rune");
 		return (this.path_list[i-1] == dir);
 	}
 	public void mark_rune(int dir){
 		Debug.Log ("marking rune");
 		if (check_rune (this.current_incomplete_rune, dir)) {
 			swap_rune (true, this.current_incomplete_rune);
-			this.current_incomplete_rune++;
+			this.current_incomplete_rune = Mathf.Min(this.current_incomplete_rune + 1, this.path_list.Length+1);
+			this.degrade_time = Mathf.Min(this.degrade_time + 1f,2f);
+			if (this.current_incomplete_rune > this.path_list.Length) {
+				this.completed = true;
+				this.degrade_time = 3f;
+				Debug.Log ("rune completed!");
+			}
 		} else {
-			swap_rune (false, Mathf.Max (this.current_incomplete_rune-1, 1));
-			this.current_incomplete_rune = Mathf.Max (this.current_incomplete_rune - 1, 1);
+			unmark_rune ();
+		}
+	}
+	public void unmark_rune(){
+		Debug.Log ("unmark rune");
+		swap_rune (false, Mathf.Max (this.current_incomplete_rune-1, 1));
+		this.current_incomplete_rune = Mathf.Max (this.current_incomplete_rune - 1, 1);
+	}
+	public void degrade_rune(float time_in){
+		//Debug.Log ("degrade rune check");
+		this.degrade_time = this.degrade_time - time_in;
+		if (this.degrade_time <= 0f) {
+			if (this.completed){
+				Debug.Log ("fully degrading completed rune");
+				this.reset_rune ();
+				this.completed = false;
+				this.degrade_time = 2f;
+			} else {
+				Debug.Log ("degrading rune");
+				this.unmark_rune ();
+				this.completed = false;
+				this.degrade_time = 2f;
+			}
 		}
 	}
 	public void reset_rune(){
@@ -233,7 +267,13 @@ public class rune_manager : MonoBehaviour {
 	
 	// Update is called once per frame
 	int velocity = 10;
+	bool tab_down = false;
 	void Update () {
+		for (int i = 0; i < spell_list.Length; i++) {
+			spell_list [i].degrade_rune (Time.deltaTime);
+		}
+
+
 		// Left
 		if((Input.GetKey(KeyCode.LeftArrow)))
 		{
@@ -315,7 +355,22 @@ public class rune_manager : MonoBehaviour {
 			spell_list [current_spell].showhide_rune_tiles (true);
 			spell_list [current_spell].enable_rune_tiles ();
 		}
-		if (Input.GetKey (KeyCode.Escape)) {
+
+		if (Input.GetKey (KeyCode.Tab) && !tab_down) {
+			spell_list [current_spell].showhide_rune_tiles (false);
+			spell_list [current_spell].enable_rune_tiles ();
+
+			current_spell++;
+			if (current_spell >= spell_list.Length) {
+				current_spell = 0;
+			}
+			spell_list [current_spell].showhide_rune_tiles (true);
+			spell_list [current_spell].enable_rune_tiles ();
+			tab_down = true;
+		}
+		tab_down = Input.GetKey (KeyCode.Tab);
+
+		if (Input.GetKey (KeyCode.Space) && spell_list[current_spell].get_completed()) {
 			spell_list [current_spell].reset_rune ();
 		}
 	}
