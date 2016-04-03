@@ -193,6 +193,7 @@ public class rune_object {
 	public void reset_rune(){
 		Debug.Log ("resetting rune");
 		this.current_incomplete_rune = 1;
+		this.completed = false;
 		for (int i = 1; i < this.rune_obj_list.Length; i++) {
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];
 		}
