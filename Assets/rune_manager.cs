@@ -248,7 +248,7 @@ public class rune_manager : MonoBehaviour {
 		rune_complete_body_array[3,1] = rune_complete_body_list[10];
 		rune_complete_body_array[3,2] = rune_complete_body_list[11];
 
-		spell_list = new rune_object[2];
+		spell_list = new rune_object[4];
 		spell_list [0] = new rune_object(new int[]{0,3,3,2,3,0,0,1,0,0,0,3,0,3,0,3,3,2},rune_start_list,rune_body_array,rune_end_list,
 			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
 		spell_list [0].make_rune_tiles();
@@ -263,6 +263,20 @@ public class rune_manager : MonoBehaviour {
 		spell_list[1].enable_rune_tiles ();
 		spell_list[1].swap_rune(true,0);
 
+		spell_list[2] = new rune_object(new int[]{0,0,0,0,3,0,0,3,2},rune_start_list,rune_body_array,rune_end_list,
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
+		spell_list[2].make_rune_tiles();
+		spell_list[2].showhide_rune_tiles (false);
+		spell_list[2].enable_rune_tiles ();
+		spell_list[2].swap_rune(true,0);
+
+		spell_list[3] = new rune_object(new int[]{3,2,3,3,0,0,0,0,1,1,0},rune_start_list,rune_body_array,rune_end_list,
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
+		spell_list[3].make_rune_tiles();
+		spell_list[3].showhide_rune_tiles (false);
+		spell_list[3].enable_rune_tiles ();
+		spell_list[3].swap_rune(true,0);
+
 		current_spell = 0;
 	}
 	
@@ -276,53 +290,53 @@ public class rune_manager : MonoBehaviour {
 
 
 		// Left
-		if((Input.GetKey(KeyCode.LeftArrow)))
+		if(Input.GetKey(KeyCode.LeftArrow) || (Input.GetAxis("Horizontal1") == -1))
 		{
 			for (int i = 0; i < spell_list.Length; i++) {
 				spell_list [i].move_rune((Vector3.left* velocity) * Time.deltaTime);
 			}
 		}
 		// Right
-		if((Input.GetKey(KeyCode.RightArrow)))
+		if(Input.GetKey(KeyCode.RightArrow) || (Input.GetAxis("Horizontal1") == 1))
 		{
 			for (int i = 0; i < spell_list.Length; i++) {
 				spell_list [i].move_rune((Vector3.right* velocity) * Time.deltaTime);
 			}
 		}
 		// Up
-		if((Input.GetKey(KeyCode.UpArrow)))
+		if(Input.GetKey(KeyCode.UpArrow) || (Input.GetAxis("Vertical1") == 1))
 		{
 			for (int i = 0; i < spell_list.Length; i++) {
 				spell_list [i].move_rune((Vector3.up* velocity) * Time.deltaTime);
 			}
 		}
 		// Down
-		if(Input.GetKey(KeyCode.DownArrow))
+		if(Input.GetKey(KeyCode.DownArrow) || (Input.GetAxis("Vertical1") == -1))
 		{
 			for (int i = 0; i < spell_list.Length; i++) {
 				spell_list [i].move_rune((Vector3.down* velocity) * Time.deltaTime);
 			}
 		}
 
-		if (Input.GetKey (KeyCode.S)) {
+		if (Input.GetKey (KeyCode.S) || Input.GetKey(KeyCode.JoystickButton0)) {
 			spell_list [current_spell].rune_keys_down [0] = true;
 		} else if (spell_list [current_spell].rune_keys_down [0]) {
 			spell_list [current_spell].rune_keys_down [0] = false;
 			spell_list [current_spell].rune_keys_pressed [0] = true;
 		}
-		if (Input.GetKey (KeyCode.A)) {
+		if (Input.GetKey (KeyCode.A) || Input.GetKey(KeyCode.JoystickButton2))  {
 			spell_list [current_spell].rune_keys_down [1] = true;
 		}else if (spell_list [current_spell].rune_keys_down [1]) {
 			spell_list [current_spell].rune_keys_down [1] = false;
 			spell_list [current_spell].rune_keys_pressed [1] = true;
 		}
-		if (Input.GetKey (KeyCode.W)) {
+		if (Input.GetKey (KeyCode.W) || Input.GetKey(KeyCode.JoystickButton3))  {
 			spell_list [current_spell].rune_keys_down [2] = true;
 		}else if (spell_list [current_spell].rune_keys_down [2]) {
 			spell_list [current_spell].rune_keys_down [2] = false;
 			spell_list [current_spell].rune_keys_pressed [2] = true;
 		}
-		if (Input.GetKey (KeyCode.D)) {
+		if (Input.GetKey (KeyCode.D) || Input.GetKey(KeyCode.JoystickButton1))  {
 			spell_list [current_spell].rune_keys_down [3] = true;
 		}else if (spell_list [current_spell].rune_keys_down [3]) {
 			spell_list [current_spell].rune_keys_down [3] = false;
@@ -340,7 +354,7 @@ public class rune_manager : MonoBehaviour {
 		if (1f == num_rune_keys_pressed | 10f == num_rune_keys_pressed | 100f == num_rune_keys_pressed | 1000f == num_rune_keys_pressed) {
 			spell_list [current_spell].mark_rune ((int)Mathf.Log10(num_rune_keys_pressed));
 		}
-		if (Input.GetKey(KeyCode.Alpha1)){
+		if (Input.GetKey(KeyCode.Alpha1) || Input.GetAxis("Vertical2") == -1){
 			spell_list [current_spell].showhide_rune_tiles (false);
 			spell_list [current_spell].enable_rune_tiles ();
 
@@ -348,7 +362,7 @@ public class rune_manager : MonoBehaviour {
 			spell_list [current_spell].showhide_rune_tiles (true);
 			spell_list [current_spell].enable_rune_tiles ();
 		}
-		if (Input.GetKey(KeyCode.Alpha2)){
+		if (Input.GetKey(KeyCode.Alpha2) || Input.GetAxis("Horizontal2") == -1){
 			spell_list [current_spell].showhide_rune_tiles (false);
 			spell_list [current_spell].enable_rune_tiles ();
 
@@ -356,8 +370,25 @@ public class rune_manager : MonoBehaviour {
 			spell_list [current_spell].showhide_rune_tiles (true);
 			spell_list [current_spell].enable_rune_tiles ();
 		}
+		if (Input.GetKey(KeyCode.Alpha3) || Input.GetAxis("Vertical2") == 1){
+			spell_list [current_spell].showhide_rune_tiles (false);
+			spell_list [current_spell].enable_rune_tiles ();
 
-		if (Input.GetKey (KeyCode.Tab) && !tab_down) {
+			current_spell = 2;
+			spell_list [current_spell].showhide_rune_tiles (true);
+			spell_list [current_spell].enable_rune_tiles ();
+		}
+		if (Input.GetKey(KeyCode.Alpha4) || Input.GetAxis("Horizontal2") == 1){
+			spell_list [current_spell].showhide_rune_tiles (false);
+			spell_list [current_spell].enable_rune_tiles ();
+
+			current_spell = 3;
+			spell_list [current_spell].showhide_rune_tiles (true);
+			spell_list [current_spell].enable_rune_tiles ();
+		}
+
+
+		if ((Input.GetKey (KeyCode.Tab) || Input.GetKey(KeyCode.JoystickButton4)) && !tab_down) {
 			spell_list [current_spell].showhide_rune_tiles (false);
 			spell_list [current_spell].enable_rune_tiles ();
 
@@ -369,9 +400,22 @@ public class rune_manager : MonoBehaviour {
 			spell_list [current_spell].enable_rune_tiles ();
 			tab_down = true;
 		}
-		tab_down = Input.GetKey (KeyCode.Tab);
+		if (Input.GetKey(KeyCode.JoystickButton5) && !tab_down) {
+			spell_list [current_spell].showhide_rune_tiles (false);
+			spell_list [current_spell].enable_rune_tiles ();
 
-		if (Input.GetKey (KeyCode.Space) && spell_list[current_spell].get_completed()) {
+			current_spell--;
+			if (current_spell < 0) {
+				current_spell = spell_list.Length-1;
+			}
+			spell_list [current_spell].showhide_rune_tiles (true);
+			spell_list [current_spell].enable_rune_tiles ();
+			tab_down = true;
+		}
+		tab_down = Input.GetKey (KeyCode.Tab) || Input.GetKey(KeyCode.JoystickButton4) || Input.GetKey(KeyCode.JoystickButton5);
+
+
+		if ((Input.GetKey (KeyCode.Space) || (Input.GetAxis("RTrigger") >= 0.75)) && spell_list[current_spell].get_completed()) {
 			spell_list [current_spell].reset_rune ();
 		}
 	}

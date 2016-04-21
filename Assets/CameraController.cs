@@ -27,22 +27,22 @@ public class CameraController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// Left
-		if((Input.GetKey(KeyCode.LeftArrow)))
+		if(Input.GetKey(KeyCode.LeftArrow) || (Input.GetAxis("Horizontal1") == -1))
 		{
 			transform.Translate((Vector3.left* cameraVelocity) * Time.deltaTime);
 		}
 		// Right
-		if((Input.GetKey(KeyCode.RightArrow)))
+		if(Input.GetKey(KeyCode.RightArrow) || (Input.GetAxis("Horizontal1") == 1))
 		{
 			transform.Translate((Vector3.right * cameraVelocity) * Time.deltaTime);
 		}
 		// Up
-		if((Input.GetKey(KeyCode.UpArrow)))
+		if(Input.GetKey(KeyCode.UpArrow) || (Input.GetAxis("Vertical1") == 1))
 		{
 			transform.Translate((forwards * cameraVelocity) * Time.deltaTime);
 		}
 		// Down
-		if(Input.GetKey(KeyCode.DownArrow))
+		if(Input.GetKey(KeyCode.DownArrow) || (Input.GetAxis("Vertical1") == -1))
 		{
 			transform.Translate((backwards * cameraVelocity) * Time.deltaTime);
 		}

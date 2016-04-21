@@ -17,28 +17,28 @@ public class leila_walk : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// Left
-		if((Input.GetKey(KeyCode.LeftArrow)))
+		if(Input.GetKey(KeyCode.LeftArrow) || (Input.GetAxis("Horizontal1") == -1))
 		{
 			transform.Translate((Vector3.left* velocity) * Time.deltaTime);
 			direction = 1;
 			moving = 1;
 		}
 		// Right
-		if((Input.GetKey(KeyCode.RightArrow)))
+		if(Input.GetKey(KeyCode.RightArrow) || (Input.GetAxis("Horizontal1") == 1))
 		{
 			transform.Translate((Vector3.right * velocity) * Time.deltaTime);
 			direction = 3;
 			moving = 1;
 		}
 		// Up
-		if((Input.GetKey(KeyCode.UpArrow)))
+		if(Input.GetKey(KeyCode.UpArrow) || (Input.GetAxis("Vertical1") == 1))
 		{
 			transform.Translate((Vector3.forward * velocity) * Time.deltaTime);
 			direction = 2;
 			moving = 1;
 		}
 		// Down
-		if(Input.GetKey(KeyCode.DownArrow))
+		if(Input.GetKey(KeyCode.DownArrow) || (Input.GetAxis("Vertical1") == -1))
 		{
 			transform.Translate((Vector3.back * velocity) * Time.deltaTime);
 			direction = 0;
