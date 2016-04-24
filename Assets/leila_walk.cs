@@ -13,11 +13,33 @@ public class leila_walk : MonoBehaviour {
 	void Start () {
 	
 	}
+
+	public void move_leila(int in_direction){
+		direction = in_direction;
+		moving = 1;
+		switch (in_direction) {
+		case 0:
+			this.transform.Translate ((Vector3.back * velocity) * Time.deltaTime);
+			break;
+		case 1:
+			this.transform.Translate ((Vector3.left * velocity) * Time.deltaTime);
+			break;
+		case 2:
+			this.transform.Translate ((Vector3.forward * velocity) * Time.deltaTime);
+			break;
+		case 3:
+			this.transform.Translate ((Vector3.right * velocity) * Time.deltaTime);
+			break;
+		}
+
+	}
 	
 	// Update is called once per frame
 	void Update () {
+		
 		// Left
-		if(Input.GetKey(KeyCode.LeftArrow) || (Input.GetAxis("Horizontal1") == -1))
+		/*
+		if(!input_manager.is_paused && (Input.GetKey(KeyCode.LeftArrow) || (Input.GetAxis("Horizontal1") == -1)))
 		{
 			transform.Translate((Vector3.left* velocity) * Time.deltaTime);
 			direction = 1;
@@ -44,6 +66,7 @@ public class leila_walk : MonoBehaviour {
 			direction = 0;
 			moving = 1;
 		}
+		*/
 		if (1 == moving) {
 
 			GetComponent<SpriteRenderer> ().sprite = tiles [2 * direction + current_frame];

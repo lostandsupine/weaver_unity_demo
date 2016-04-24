@@ -279,7 +279,31 @@ public class rune_manager : MonoBehaviour {
 
 		current_spell = 0;
 	}
-	
+	public void move_runes(int in_direction){
+		switch (in_direction) {
+		case 0:
+			for (int i = 0; i < spell_list.Length; i++) {
+				spell_list [i].move_rune((Vector3.down* velocity) * Time.deltaTime);
+			}			
+			break;
+		case 1:
+			for (int i = 0; i < spell_list.Length; i++) {
+				spell_list [i].move_rune((Vector3.left* velocity) * Time.deltaTime);
+			}
+			break;
+		case 2:
+			for (int i = 0; i < spell_list.Length; i++) {
+				spell_list [i].move_rune((Vector3.up* velocity) * Time.deltaTime);
+			}
+			break;
+		case 3:
+			for (int i = 0; i < spell_list.Length; i++) {
+				spell_list [i].move_rune((Vector3.right* velocity) * Time.deltaTime);
+			}
+			break;
+		}
+	}
+
 	// Update is called once per frame
 	int velocity = 10;
 	bool tab_down = false;
@@ -290,6 +314,7 @@ public class rune_manager : MonoBehaviour {
 
 
 		// Left
+		/*
 		if(Input.GetKey(KeyCode.LeftArrow) || (Input.GetAxis("Horizontal1") == -1))
 		{
 			for (int i = 0; i < spell_list.Length; i++) {
@@ -317,6 +342,7 @@ public class rune_manager : MonoBehaviour {
 				spell_list [i].move_rune((Vector3.down* velocity) * Time.deltaTime);
 			}
 		}
+		*/
 
 		if (Input.GetKey (KeyCode.S) || Input.GetKey(KeyCode.JoystickButton0)) {
 			spell_list [current_spell].rune_keys_down [0] = true;

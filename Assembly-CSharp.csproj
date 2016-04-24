@@ -47,6 +47,7 @@
   <ItemGroup>
      <Compile Include="Assets\CameraController.cs" />
      <Compile Include="Assets\NewBehaviourScript.cs" />
+     <Compile Include="Assets\input_manager.cs" />
      <Compile Include="Assets\leila_walk.cs" />
      <Compile Include="Assets\rune_manager.cs" />
  <Reference Include="UnityEngine.UI">
