@@ -18,13 +18,13 @@ public class leila_walk : MonoBehaviour {
 		moving = 1;
 		switch (in_direction) {
 		case 0:
-			this.transform.Translate ((Vector3.back * velocity) * Time.deltaTime);
+			this.transform.Translate ((Vector3.down * velocity) * Time.deltaTime);
 			break;
 		case 1:
 			this.transform.Translate ((Vector3.left * velocity) * Time.deltaTime);
 			break;
 		case 2:
-			this.transform.Translate ((Vector3.forward * velocity) * Time.deltaTime);
+			this.transform.Translate ((Vector3.up * velocity) * Time.deltaTime);
 			break;
 		case 3:
 			this.transform.Translate ((Vector3.right * velocity) * Time.deltaTime);
