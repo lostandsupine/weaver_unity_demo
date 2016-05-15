@@ -14,6 +14,8 @@ public class rune_object {
 	private bool show_runes;
 	private float degrade_time;
 	private bool completed;
+	private Vector3 rune_center = GameObject.Find ("rune_manager").transform.position;
+
 
 	private int flip(int direction_in){
 		switch (direction_in){
@@ -115,9 +117,9 @@ public class rune_object {
 			this.rune_obj_list[i] = new GameObject("rune_tile");
 			this.rune_obj_list[i].AddComponent<SpriteRenderer> ();
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];
-			
-			this.rune_obj_list[i].transform.rotation = Quaternion.Euler(90,0,0);
-			this.rune_obj_list[i].transform.position = new Vector3 (-9+this.position_list[i,0],1.1F, 13+this.position_list[i,1]);
+	
+			this.rune_obj_list[i].transform.rotation = Quaternion.Euler(0,0,0);
+			this.rune_obj_list[i].transform.position = new Vector3 (rune_center.x + this.position_list[i,0], rune_center.y + this.position_list[i,1], rune_center.z - 1.1F);
 			this.rune_obj_list[i].transform.localScale = new Vector3 (5, 5, 5);
 		}
 	}
@@ -216,7 +218,7 @@ public class rune_manager : MonoBehaviour {
 
 	public rune_object[] spell_list;
 	public int current_spell;
-	int velocity = 10;
+	//int velocity = 10;
 
 	void Start () {
 		rune_body_array = new Sprite[4,4];
@@ -278,26 +280,26 @@ public class rune_manager : MonoBehaviour {
 
 		current_spell = 0;
 	}
-	public void move_runes(int in_direction){
+	public void move_runes(int in_direction, float velocity_in){
 		switch (in_direction) {
 		case 0:
 			for (int i = 0; i < spell_list.Length; i++) {
-				spell_list [i].move_rune((Vector3.down* velocity) * Time.deltaTime);
+				spell_list [i].move_rune((Vector3.down* velocity_in) * Time.deltaTime);
 			}			
 			break;
 		case 1:
 			for (int i = 0; i < spell_list.Length; i++) {
-				spell_list [i].move_rune((Vector3.left* velocity) * Time.deltaTime);
+				spell_list [i].move_rune((Vector3.left* velocity_in) * Time.deltaTime);
 			}
 			break;
 		case 2:
 			for (int i = 0; i < spell_list.Length; i++) {
-				spell_list [i].move_rune((Vector3.up* velocity) * Time.deltaTime);
+				spell_list [i].move_rune((Vector3.up* velocity_in) * Time.deltaTime);
 			}
 			break;
 		case 3:
 			for (int i = 0; i < spell_list.Length; i++) {
-				spell_list [i].move_rune((Vector3.right* velocity) * Time.deltaTime);
+				spell_list [i].move_rune((Vector3.right* velocity_in) * Time.deltaTime);
 			}
 			break;
 		}

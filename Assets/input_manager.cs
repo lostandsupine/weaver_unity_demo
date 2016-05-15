@@ -9,6 +9,7 @@ public class input_manager : MonoBehaviour {
 	private float num_rune_keys_pressed = 0;
 	private bool tab_down = false;
 	private bool pause_down = false;
+	private float velocity = 7f;
 
 	void Start () {
 	
@@ -32,24 +33,24 @@ public class input_manager : MonoBehaviour {
 		if (!is_paused) {
 			
 			if (!is_paused && (Input.GetKey (KeyCode.DownArrow) || (Input.GetAxis ("Vertical1") == -1))) {
-				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (0);
-				GameObject.Find ("camera").GetComponent<CameraController> ().move_camera (0);
-				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().move_runes (0);
+				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (0,velocity);
+				GameObject.Find ("camera").GetComponent<CameraController> ().move_camera (0,velocity);
+				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().move_runes (0,velocity);
 			}
 			if (!is_paused && (Input.GetKey (KeyCode.LeftArrow) || (Input.GetAxis ("Horizontal1") == -1))) {
-				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (1);
-				GameObject.Find ("camera").GetComponent<CameraController> ().move_camera (1);
-				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().move_runes (1);
+				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (1,velocity);
+				GameObject.Find ("camera").GetComponent<CameraController> ().move_camera (1,velocity);
+				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().move_runes (1,velocity);
 			}
 			if (!is_paused && (Input.GetKey (KeyCode.UpArrow) || (Input.GetAxis ("Vertical1") == 1))) {
-				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (2);
-				GameObject.Find ("camera").GetComponent<CameraController> ().move_camera (2);
-				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().move_runes (2);
+				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (2,velocity);
+				GameObject.Find ("camera").GetComponent<CameraController> ().move_camera (2,velocity);
+				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().move_runes (2,velocity);
 			}
 			if (!is_paused && (Input.GetKey (KeyCode.RightArrow) || (Input.GetAxis ("Horizontal1") == 1))) {
-				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (3);
-				GameObject.Find ("camera").GetComponent<CameraController> ().move_camera (3);
-				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().move_runes (3);
+				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (3,velocity);
+				GameObject.Find ("camera").GetComponent<CameraController> ().move_camera (3,velocity);
+				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().move_runes (3,velocity);
 			}
 
 			if (Input.GetKey (KeyCode.S) || Input.GetKey (KeyCode.JoystickButton0)) {
