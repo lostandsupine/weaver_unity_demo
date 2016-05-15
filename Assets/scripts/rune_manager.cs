@@ -115,6 +115,7 @@ public class rune_object {
 			//gameObject.transform.localScale = new Vector3 (6, 6, 6);
 
 			this.rune_obj_list[i] = new GameObject("rune_tile");
+			this.rune_obj_list [i].transform.parent = GameObject.Find ("rune_manager").transform;
 			this.rune_obj_list[i].AddComponent<SpriteRenderer> ();
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];
 	
@@ -124,17 +125,17 @@ public class rune_object {
 		}
 	}
 	public void enable_rune_tiles(){
-		Debug.Log ("enable rune");
+		//Debug.Log ("enable rune");
 		for (int i = 0; i < this.rune_obj_list.Length; i++){
 			this.rune_obj_list [i].GetComponent<SpriteRenderer> ().enabled = this.show_runes;
 		}
 	}
 	public void showhide_rune_tiles(bool showhide){
-		Debug.Log ("showhide tiles");
+		//Debug.Log ("showhide tiles");
 		this.show_runes = showhide;
 	}
 	public bool is_showing(){
-		Debug.Log ("is showing?");
+		//Debug.Log ("is showing?");
 		return this.show_runes;
 	}
 	public void move_rune(Vector3 direction){
@@ -155,7 +156,7 @@ public class rune_object {
 		return (this.path_list[i-1] == dir);
 	}
 	public void mark_rune(int dir){
-		Debug.Log ("marking rune");
+		//Debug.Log ("marking rune");
 		if (check_rune (this.current_incomplete_rune, dir)) {
 			swap_rune (true, this.current_incomplete_rune);
 			this.current_incomplete_rune = Mathf.Min(this.current_incomplete_rune + 1, this.path_list.Length+1);
@@ -163,14 +164,14 @@ public class rune_object {
 			if (this.current_incomplete_rune > this.path_list.Length) {
 				this.completed = true;
 				this.degrade_time = 3f;
-				Debug.Log ("rune completed!");
+				//Debug.Log ("rune completed!");
 			}
 		} else {
 			unmark_rune ();
 		}
 	}
 	public void unmark_rune(){
-		Debug.Log ("unmark rune");
+		//Debug.Log ("unmark rune");
 		swap_rune (false, Mathf.Max (this.current_incomplete_rune-1, 1));
 		this.current_incomplete_rune = Mathf.Max (this.current_incomplete_rune - 1, 1);
 	}
@@ -179,12 +180,12 @@ public class rune_object {
 		this.degrade_time = this.degrade_time - time_in;
 		if (this.degrade_time <= 0f) {
 			if (this.completed){
-				Debug.Log ("fully degrading completed rune");
+				//Debug.Log ("fully degrading completed rune");
 				this.reset_rune ();
 				this.completed = false;
 				this.degrade_time = 2f;
 			} else {
-				Debug.Log ("degrading rune");
+				//Debug.Log ("degrading rune");
 				this.unmark_rune ();
 				this.completed = false;
 				this.degrade_time = 2f;
@@ -192,7 +193,7 @@ public class rune_object {
 		}
 	}
 	public void reset_rune(){
-		Debug.Log ("resetting rune");
+		//Debug.Log ("resetting rune");
 		this.current_incomplete_rune = 1;
 		this.completed = false;
 		for (int i = 1; i < this.rune_obj_list.Length; i++) {
