@@ -251,7 +251,7 @@ public class rune_manager : MonoBehaviour {
 		rune_complete_body_array[3,2] = rune_complete_body_list[11];
 
 		spell_list = new rune_object[4];
-		spell_list [0] = new rune_object(new int[]{0,3,3,2,3,0,0,1,0,0,0,3,0,3,0,3,3,2},rune_start_list,rune_body_array,rune_end_list,
+		spell_list [0] = new rune_object(new int[]{1,0,3},rune_start_list,rune_body_array,rune_end_list,
 			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
 		spell_list [0].make_rune_tiles();
 		spell_list [0].showhide_rune_tiles (true);
@@ -334,9 +334,15 @@ public class rune_manager : MonoBehaviour {
 		spell_list [current_spell].enable_rune_tiles ();
 	}
 
-	public void cast_spell(){
+	public void cast_spell(Vector2 direction_in){
 		if (spell_list[current_spell].get_completed()) {
 			spell_list [current_spell].reset_rune ();
+			switch (current_spell){
+			case 0:
+				GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireball_spell(direction_in);
+				break;
+
+			}
 		}
 	}
 		

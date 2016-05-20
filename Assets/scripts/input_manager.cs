@@ -10,6 +10,7 @@ public class input_manager : MonoBehaviour {
 	private bool tab_down = false;
 	private bool pause_down = false;
 	private float velocity = 7f;
+	private Vector2 current_direction = new Vector2(0f,0f);
 
 	void Start () {
 	
@@ -58,6 +59,7 @@ public class input_manager : MonoBehaviour {
 				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (2 + (int)move_x, velocity / 1.414214f);
 				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (1 + (int)move_y, velocity / 1.414214f);
 			}
+			current_direction = new Vector2 (move_x, move_y);
 
 			if (Input.GetKey (KeyCode.S) || Input.GetKey (KeyCode.JoystickButton0)) {
 				rune_keys_down [0] = true;
@@ -120,7 +122,7 @@ public class input_manager : MonoBehaviour {
 			tab_down = Input.GetKey (KeyCode.Tab) || Input.GetKey (KeyCode.JoystickButton4) || Input.GetKey (KeyCode.JoystickButton5);
 
 			if (Input.GetKey (KeyCode.Space)  || (Input.GetAxis("RTrigger") >= 0.75)) {
-				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().cast_spell();
+				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().cast_spell(current_direction.normalized);
 			}
 		}
 	}
