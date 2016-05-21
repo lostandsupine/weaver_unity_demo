@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class spell_object{
+public class spell_object : MonoBehaviour {
 	public Sprite[] spell_sprite_list;
 	private float velocity;
 	private Vector3 direction;
@@ -24,14 +24,26 @@ public class spell_object{
 		this.spell_game_object = new GameObject ();
 		this.spell_game_object.name = spell_name;
 
+		this.spell_game_object.AddComponent<spell_collision_manager> ();
+
 		this.spell_game_object.AddComponent<SpriteRenderer> ();
 		this.spell_game_object.GetComponent<SpriteRenderer> ().sprite = this.spell_sprite_list[0];
+
+		this.spell_game_object.AddComponent<BoxCollider2D> ();
+		this.spell_game_object.GetComponent<BoxCollider2D> ().isTrigger = true;
+
+		this.spell_game_object.AddComponent<Rigidbody2D> ();
+		this.spell_game_object.GetComponent<Rigidbody2D> ().isKinematic = true;
+		//this.spell_game_object.GetComponent<Rigidbody2D> ().gravityScale = 0;
+
+
 
 		this.spell_game_object.transform.rotation = Quaternion.Euler(0,0,0);
 		this.spell_game_object.transform.position = this.origin;
 		this.spell_game_object.transform.localScale = new Vector3 (2, 2, 2);
 
 	}
+
 	public void move_spell(Vector3 direction_in, float velocity_in){
 		this.spell_game_object.transform.Translate (direction_in * velocity_in * Time.deltaTime);
 	}
@@ -61,18 +73,18 @@ public class spell_manager : MonoBehaviour {
 	public spell_manager(){
 
 	}
+	public void remove_spell(spell_object spell_to_remove){
+		active_spells_to_remove.Add (active_spell_list.BinarySearch (spell_to_remove));
+	}
 
 	// Use this for initialization
 	void Start () {
-		//this.active_spell_list = new spell_object[0];
-		//this.make_fireball_spell ();
 	
 	}
 	
 	// Update is called once per frame
 
 	void Update () {
-		active_spells_to_remove.Clear();
 		for (int i = 0; i < this.active_spell_list.Count; i++) {
 			if (this.active_spell_list [i].spell_timeout ()) {
 				active_spells_to_remove.Add (i);
@@ -85,6 +97,8 @@ public class spell_manager : MonoBehaviour {
 
 		for (int i = 0; i < this.active_spell_list.Count; i++) {
 			this.active_spell_list [i].move_spell_default ();
+
 		}
+		active_spells_to_remove.Clear();
 	}
 }
