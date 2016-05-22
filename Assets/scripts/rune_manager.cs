@@ -157,7 +157,7 @@ public class rune_object {
 	}
 	public void mark_rune(int dir){
 		//Debug.Log ("marking rune");
-		if (check_rune (this.current_incomplete_rune, dir)) {
+		if (this.current_incomplete_rune <= this.path_list.Length && check_rune (this.current_incomplete_rune, dir)) {
 			swap_rune (true, this.current_incomplete_rune);
 			this.current_incomplete_rune = Mathf.Min(this.current_incomplete_rune + 1, this.path_list.Length+1);
 			this.degrade_time = Mathf.Min(this.degrade_time + 1f,2f);
@@ -251,7 +251,7 @@ public class rune_manager : MonoBehaviour {
 		rune_complete_body_array[3,2] = rune_complete_body_list[11];
 
 		spell_list = new rune_object[4];
-		spell_list [0] = new rune_object(new int[]{1,0,3},rune_start_list,rune_body_array,rune_end_list,
+		spell_list [0] = new rune_object(new int[]{2,3},rune_start_list,rune_body_array,rune_end_list,
 			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
 		spell_list [0].make_rune_tiles();
 		spell_list [0].showhide_rune_tiles (true);

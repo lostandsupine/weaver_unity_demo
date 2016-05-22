@@ -50,7 +50,7 @@ public class spell_object : MonoBehaviour {
 
 		this.gameObject.transform.localScale = new Vector3 (2, 2, 2);
 	}
-	void Update(){
+	void FixedUpdate(){
 		if (spell_timeout()) {
 			GameObject.Destroy (this.gameObject);
 		}
