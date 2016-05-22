@@ -60,8 +60,8 @@
      <Compile Include="Assets\scripts\leila_walk.cs" />
      <Compile Include="Assets\scripts\map_collision_manager.cs" />
      <Compile Include="Assets\scripts\rune_manager.cs" />
-     <Compile Include="Assets\scripts\spell_collision_manager.cs" />
      <Compile Include="Assets\scripts\spell_manager.cs" />
+     <Compile Include="Assets\scripts\spell_object.cs" />
      <None Include="Assets\Tiled2Unity\Shaders\shaDefault.shader" />
      <None Include="Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
