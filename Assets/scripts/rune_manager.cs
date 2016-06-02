@@ -6,11 +6,13 @@ public class rune_object {
 	public Sprite[] rune_complete_sprite_list;
 	private int[] path_list;
 	private int[,] position_list;
-	private int[,] spell_list;
+	private int[] rune_words;
+	private int[] adjustment;
+	//private int[,] spell_list;
 	public GameObject[] rune_obj_list;
 	public int current_incomplete_rune;
-	public bool[] rune_keys_down;
-	public bool[] rune_keys_pressed;
+	//public bool[] rune_keys_down;
+	//public bool[] rune_keys_pressed;
 	private bool show_runes;
 	private float degrade_time;
 	private bool completed;
@@ -39,7 +41,8 @@ public class rune_object {
 	}
 
 	public rune_object(int[] path_list_in,Sprite[] rune_start_list,Sprite[,] rune_body_array,Sprite[] rune_end_list,
-		Sprite[] rune_complete_start_list,Sprite[,] rune_complete_body_array,Sprite[] rune_complete_end_list){
+		Sprite[] rune_complete_start_list,Sprite[,] rune_complete_body_array,Sprite[] rune_complete_end_list, 
+		int[] rune_words_in){
 
 		this.path_list = path_list_in;
 		this.rune_sprite_list = new Sprite[this.path_list.Length+1];
@@ -57,12 +60,24 @@ public class rune_object {
 		this.degrade_time = 2f;
 		this.completed = false;
 
-		this.rune_keys_down = new bool[4];
-		this.rune_keys_pressed = new bool[4];
-		for (int i = 0; i < 4; i++) {
-			this.rune_keys_down [i] = false;
-			this.rune_keys_pressed [i] = false;
+		int[] adjustment = new int[2];
+		adjustment [0] = 0;
+		adjustment [1] = 0;
+		int[] rune_words = new int[this.path_list.Length+1];
+		rune_words [0] = 0;
+
+		for (int i = 1; i <= rune_words_in.Length; i++) {
+			for (int j = 1; j <= rune_words_in [i-1]; j++) {
+				rune_words [j] = i;
+			}
 		}
+
+		//this.rune_keys_down = new bool[4];
+		//this.rune_keys_pressed = new bool[4];
+		//for (int i = 0; i < 4; i++) {
+		//	this.rune_keys_down [i] = false;
+		//	this.rune_keys_pressed [i] = false;
+		//}
 
 		for (int i = 1; i <= (this.path_list.Length); i++){
 			if (i == (this.path_list.Length)){
@@ -75,6 +90,24 @@ public class rune_object {
 				this.rune_complete_sprite_list[i] = rune_complete_body_array[flip(path_list_in[i-1]),path_list_in[i]];
 
 			}
+
+			if (rune_words [i - 1] < rune_words [i]) {
+				switch (path_list_in[i-1]){
+				case 0:
+					adjustment [1] = adjustment [1] - 1;
+					break;
+				case 1:
+					adjustment [0] = adjustment [0] - 1;
+					break;
+				case 2:
+					adjustment [1] = adjustment [1] + 1;
+					break;
+				case 3:
+					adjustment [0] = adjustment [0] + 1;
+					break;
+				}
+			}
+
 			switch (path_list_in[i-1]){
 			case 0:
 				this.position_list[i,0] = this.position_list[i-1,0];
@@ -91,6 +124,30 @@ public class rune_object {
 			case 3:
 				this.position_list[i,0] = this.position_list[i-1,0]+1;
 				this.position_list[i,1] = this.position_list[i-1,1];
+				break;
+			default:
+				Debug.Log("incorrect direction in path list of rune object");
+				break;
+			}
+		}
+
+		for (int i = 1; i <= (this.path_list.Length); i++) {
+			switch (path_list_in[i-1]){
+			case 0:
+				this.position_list[i,0] = this.position_list[i,0] + adjustment[0];
+				this.position_list[i,1] = this.position_list[i,1] + adjustment[1];
+				break;
+			case 1:
+				this.position_list[i,0] = this.position_list[i,0] + adjustment[0];
+				this.position_list[i,1] = this.position_list[i,1] + adjustment[1];
+				break;
+			case 2:
+				this.position_list[i,0] = this.position_list[i,0] + adjustment[0];
+				this.position_list[i,1] = this.position_list[i,1] + adjustment[1];
+				break;
+			case 3:
+				this.position_list[i,0] = this.position_list[i,0] + adjustment[0];
+				this.position_list[i,1] = this.position_list[i,1] + adjustment[1];
 				break;
 			default:
 				Debug.Log("incorrect direction in path list of rune object");
@@ -214,8 +271,8 @@ public class rune_manager : MonoBehaviour {
 	public Sprite[,] rune_body_array;
 	public Sprite[,] rune_complete_body_array;
 	public rune_object the_rune;
-	public rune_object the_rune2;
-	private float num_rune_keys_pressed = 0;
+	//public rune_object the_rune2;
+	//private float num_rune_keys_pressed = 0;
 
 	public rune_object[] spell_list;
 	public int current_spell;
@@ -250,34 +307,36 @@ public class rune_manager : MonoBehaviour {
 		rune_complete_body_array[3,1] = rune_complete_body_list[10];
 		rune_complete_body_array[3,2] = rune_complete_body_list[11];
 
-		spell_list = new rune_object[4];
+		spell_list = new rune_object[1];
 		spell_list [0] = new rune_object(new int[]{2,3},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2});
 		spell_list [0].make_rune_tiles();
 		spell_list [0].showhide_rune_tiles (true);
 		spell_list [0].enable_rune_tiles ();
 		spell_list [0].swap_rune(true,0);
 
+		/*
 		spell_list[1] = new rune_object(new int[]{3,3,3,0,3,3,0,3,0,3,2,3,0,0,1,1,0,3},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{18});
 		spell_list[1].make_rune_tiles();
 		spell_list[1].showhide_rune_tiles (false);
 		spell_list[1].enable_rune_tiles ();
 		spell_list[1].swap_rune(true,0);
 
 		spell_list[2] = new rune_object(new int[]{0,0,0,0,3,0,0,3,2},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{9});
 		spell_list[2].make_rune_tiles();
 		spell_list[2].showhide_rune_tiles (false);
 		spell_list[2].enable_rune_tiles ();
 		spell_list[2].swap_rune(true,0);
 
 		spell_list[3] = new rune_object(new int[]{3,2,3,3,0,0,0,0,1,1,0},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list);
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{11});
 		spell_list[3].make_rune_tiles();
 		spell_list[3].showhide_rune_tiles (false);
 		spell_list[3].enable_rune_tiles ();
 		spell_list[3].swap_rune(true,0);
+		*/
 
 		current_spell = 0;
 	}
