@@ -5,9 +5,9 @@ public class rune_object {
 	public Sprite[] rune_sprite_list;
 	public Sprite[] rune_complete_sprite_list;
 	private int[] path_list;
-	private int[,] position_list;
+	private float[,] position_list;
 	private int[] rune_words;
-	private int[] adjustment;
+	private float[] adjustment;
 	//private int[,] spell_list;
 	public GameObject[] rune_obj_list;
 	public int current_incomplete_rune;
@@ -47,28 +47,30 @@ public class rune_object {
 		this.path_list = path_list_in;
 		this.rune_sprite_list = new Sprite[this.path_list.Length+1];
 		this.rune_complete_sprite_list = new Sprite[this.path_list.Length+1];
-		this.position_list = new int[this.path_list.Length+1,2];
+		this.position_list = new float[this.path_list.Length+1,2];
 		this.rune_obj_list = new GameObject[this.path_list.Length+1];
 		this.show_runes = false;
 
 		this.rune_sprite_list[0] = rune_start_list[path_list_in[0]];
 		this.rune_complete_sprite_list[0] = rune_complete_start_list[path_list_in[0]];
-		this.position_list[0,0] = 0;
-		this.position_list[0,1] = 0;
+		this.position_list[0,0] = 0f;
+		this.position_list[0,1] = 0f;
 
 		this.current_incomplete_rune = 1;
 		this.degrade_time = 2f;
 		this.completed = false;
 
-		int[] adjustment = new int[2];
-		adjustment [0] = 0;
-		adjustment [1] = 0;
+		float[] adjustment = new float[2];
+		adjustment [0] = 0f;
+		adjustment [1] = 0f;
 		int[] rune_words = new int[this.path_list.Length+1];
 		rune_words [0] = 0;
 
+		int current_word = 1;
 		for (int i = 1; i <= rune_words_in.Length; i++) {
 			for (int j = 1; j <= rune_words_in [i-1]; j++) {
-				rune_words [j] = i;
+				rune_words [current_word] = i;
+				current_word++;
 			}
 		}
 
@@ -80,6 +82,7 @@ public class rune_object {
 		//}
 
 		for (int i = 1; i <= (this.path_list.Length); i++){
+			//Debug.Log (rune_words [i - 1]);
 			if (i == (this.path_list.Length)){
 				this.rune_sprite_list[i] = rune_end_list[path_list_in[i-1]];
 				this.rune_complete_sprite_list[i] = rune_complete_end_list[path_list_in[i-1]];
@@ -91,38 +94,21 @@ public class rune_object {
 
 			}
 
-			if (rune_words [i - 1] < rune_words [i]) {
-				switch (path_list_in[i-1]){
-				case 0:
-					adjustment [1] = adjustment [1] - 1;
-					break;
-				case 1:
-					adjustment [0] = adjustment [0] - 1;
-					break;
-				case 2:
-					adjustment [1] = adjustment [1] + 1;
-					break;
-				case 3:
-					adjustment [0] = adjustment [0] + 1;
-					break;
-				}
-			}
-
 			switch (path_list_in[i-1]){
 			case 0:
 				this.position_list[i,0] = this.position_list[i-1,0];
-				this.position_list[i,1] = this.position_list[i-1,1]-1;
+				this.position_list[i,1] = this.position_list[i-1,1]-1f;
 				break;
 			case 1:
-				this.position_list[i,0] = this.position_list[i-1,0]-1;
+				this.position_list[i,0] = this.position_list[i-1,0]-1f;
 				this.position_list[i,1] = this.position_list[i-1,1];
 				break;
 			case 2:
 				this.position_list[i,0] = this.position_list[i-1,0];
-				this.position_list[i,1] = this.position_list[i-1,1]+1;
+				this.position_list[i,1] = this.position_list[i-1,1]+1f;
 				break;
 			case 3:
-				this.position_list[i,0] = this.position_list[i-1,0]+1;
+				this.position_list[i,0] = this.position_list[i-1,0]+1f;
 				this.position_list[i,1] = this.position_list[i-1,1];
 				break;
 			default:
@@ -132,6 +118,26 @@ public class rune_object {
 		}
 
 		for (int i = 1; i <= (this.path_list.Length); i++) {
+
+			float adjustment_magnitude = 0.2f;
+			if (rune_words [i - 1] < rune_words [i]) {
+				switch (path_list_in[i-1]){
+				case 0:
+					adjustment [1] = adjustment [1] - adjustment_magnitude;
+					break;
+				case 1:
+					adjustment [0] = adjustment [0] - adjustment_magnitude;
+					break;
+				case 2:
+					Debug.Log (i);
+					adjustment [1] = adjustment [1] + adjustment_magnitude;
+					break;
+				case 3:
+					adjustment [0] = adjustment [0] + adjustment_magnitude;
+					break;
+				}
+			}
+
 			switch (path_list_in[i-1]){
 			case 0:
 				this.position_list[i,0] = this.position_list[i,0] + adjustment[0];
@@ -142,6 +148,7 @@ public class rune_object {
 				this.position_list[i,1] = this.position_list[i,1] + adjustment[1];
 				break;
 			case 2:
+				Debug.Log (adjustment[1]);
 				this.position_list[i,0] = this.position_list[i,0] + adjustment[0];
 				this.position_list[i,1] = this.position_list[i,1] + adjustment[1];
 				break;
@@ -307,36 +314,35 @@ public class rune_manager : MonoBehaviour {
 		rune_complete_body_array[3,1] = rune_complete_body_list[10];
 		rune_complete_body_array[3,2] = rune_complete_body_list[11];
 
-		spell_list = new rune_object[1];
-		spell_list [0] = new rune_object(new int[]{2,3},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2});
+		spell_list = new rune_object[4];
+		spell_list [0] = new rune_object(new int[]{2,3,3,0,3,3,0},rune_start_list,rune_body_array,rune_end_list,
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{3,4});
 		spell_list [0].make_rune_tiles();
 		spell_list [0].showhide_rune_tiles (true);
 		spell_list [0].enable_rune_tiles ();
 		spell_list [0].swap_rune(true,0);
 
-		/*
 		spell_list[1] = new rune_object(new int[]{3,3,3,0,3,3,0,3,0,3,2,3,0,0,1,1,0,3},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{18});
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{3,15});
 		spell_list[1].make_rune_tiles();
 		spell_list[1].showhide_rune_tiles (false);
 		spell_list[1].enable_rune_tiles ();
 		spell_list[1].swap_rune(true,0);
 
 		spell_list[2] = new rune_object(new int[]{0,0,0,0,3,0,0,3,2},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{9});
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,3,4});
 		spell_list[2].make_rune_tiles();
 		spell_list[2].showhide_rune_tiles (false);
 		spell_list[2].enable_rune_tiles ();
 		spell_list[2].swap_rune(true,0);
 
 		spell_list[3] = new rune_object(new int[]{3,2,3,3,0,0,0,0,1,1,0},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{11});
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{5,6});
 		spell_list[3].make_rune_tiles();
 		spell_list[3].showhide_rune_tiles (false);
 		spell_list[3].enable_rune_tiles ();
 		spell_list[3].swap_rune(true,0);
-		*/
+
 
 		current_spell = 0;
 	}
