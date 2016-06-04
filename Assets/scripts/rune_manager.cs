@@ -16,6 +16,7 @@ public class rune_object {
 	private bool show_runes;
 	private float degrade_time;
 	private bool completed;
+	private int part_complete;
 	private Vector3 rune_center = GameObject.Find ("rune_manager").transform.position;
 
 
@@ -63,7 +64,7 @@ public class rune_object {
 		float[] adjustment = new float[2];
 		adjustment [0] = 0f;
 		adjustment [1] = 0f;
-		int[] rune_words = new int[this.path_list.Length+1];
+		this.rune_words = new int[this.path_list.Length+1];
 		rune_words [0] = 0;
 
 		int current_word = 1;
@@ -129,7 +130,7 @@ public class rune_object {
 					adjustment [0] = adjustment [0] - adjustment_magnitude;
 					break;
 				case 2:
-					Debug.Log (i);
+					//Debug.Log (i);
 					adjustment [1] = adjustment [1] + adjustment_magnitude;
 					break;
 				case 3:
@@ -148,7 +149,7 @@ public class rune_object {
 				this.position_list[i,1] = this.position_list[i,1] + adjustment[1];
 				break;
 			case 2:
-				Debug.Log (adjustment[1]);
+				//Debug.Log (adjustment[1]);
 				this.position_list[i,0] = this.position_list[i,0] + adjustment[0];
 				this.position_list[i,1] = this.position_list[i,1] + adjustment[1];
 				break;
@@ -165,8 +166,8 @@ public class rune_object {
 	public int[] get_path(){
 		return this.path_list;
 	}
-	public bool get_completed(){
-		return this.completed;
+	public int get_completed(){
+		return this.part_complete;
 	}
 	public void make_rune_tiles(){
 		for (int i = 0; i < this.rune_sprite_list.Length;  i++){
@@ -225,10 +226,18 @@ public class rune_object {
 			swap_rune (true, this.current_incomplete_rune);
 			this.current_incomplete_rune = Mathf.Min(this.current_incomplete_rune + 1, this.path_list.Length+1);
 			this.degrade_time = Mathf.Min(this.degrade_time + 1f,2f);
+
+			if (this.current_incomplete_rune < this.rune_words.Length) {
+				if (this.rune_words [this.current_incomplete_rune - 1] < this.rune_words [this.current_incomplete_rune]) {
+					this.part_complete = this.rune_words [this.current_incomplete_rune-1];
+					//Debug.Log (this.part_complete);
+				}
+			}
 			if (this.current_incomplete_rune > this.path_list.Length) {
+				this.degrade_time = 5f;
 				this.completed = true;
-				this.degrade_time = 3f;
-				//Debug.Log ("rune completed!");
+				this.part_complete = this.rune_words [this.current_incomplete_rune-1];
+				//Debug.Log (this.part_complete);
 			}
 		} else {
 			unmark_rune ();
@@ -238,6 +247,8 @@ public class rune_object {
 		//Debug.Log ("unmark rune");
 		swap_rune (false, Mathf.Max (this.current_incomplete_rune-1, 1));
 		this.current_incomplete_rune = Mathf.Max (this.current_incomplete_rune - 1, 1);
+		this.part_complete = this.rune_words [this.current_incomplete_rune-1];
+		//Debug.Log (this.part_complete);
 	}
 	public void degrade_rune(float time_in){
 		//Debug.Log ("degrade rune check");
@@ -260,6 +271,7 @@ public class rune_object {
 		//Debug.Log ("resetting rune");
 		this.current_incomplete_rune = 1;
 		this.completed = false;
+		this.part_complete = 0;
 		for (int i = 1; i < this.rune_obj_list.Length; i++) {
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];
 		}
@@ -314,14 +326,14 @@ public class rune_manager : MonoBehaviour {
 		rune_complete_body_array[3,1] = rune_complete_body_list[10];
 		rune_complete_body_array[3,2] = rune_complete_body_list[11];
 
-		spell_list = new rune_object[4];
+		spell_list = new rune_object[1];
 		spell_list [0] = new rune_object(new int[]{2,3,3,0,3,3,0},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{3,4});
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,2,3});
 		spell_list [0].make_rune_tiles();
 		spell_list [0].showhide_rune_tiles (true);
 		spell_list [0].enable_rune_tiles ();
 		spell_list [0].swap_rune(true,0);
-
+		/*
 		spell_list[1] = new rune_object(new int[]{3,3,3,0,3,3,0,3,0,3,2,3,0,0,1,1,0,3},rune_start_list,rune_body_array,rune_end_list,
 			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{3,15});
 		spell_list[1].make_rune_tiles();
@@ -342,6 +354,7 @@ public class rune_manager : MonoBehaviour {
 		spell_list[3].showhide_rune_tiles (false);
 		spell_list[3].enable_rune_tiles ();
 		spell_list[3].swap_rune(true,0);
+		*/
 
 
 		current_spell = 0;
@@ -400,14 +413,15 @@ public class rune_manager : MonoBehaviour {
 	}
 
 	public void cast_spell(Vector2 direction_in){
-		if (spell_list[current_spell].get_completed()) {
-			spell_list [current_spell].reset_rune ();
+		if (spell_list[current_spell].get_completed()>0) {
+			//Debug.Log ("what");
 			switch (current_spell){
 			case 0:
 				GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireball_spell(direction_in);
 				break;
 
 			}
+			spell_list [current_spell].reset_rune ();
 		}
 	}
 		
