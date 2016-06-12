@@ -326,14 +326,14 @@ public class rune_manager : MonoBehaviour {
 		rune_complete_body_array[3,1] = rune_complete_body_list[10];
 		rune_complete_body_array[3,2] = rune_complete_body_list[11];
 
-		spell_list = new rune_object[1];
-		spell_list [0] = new rune_object(new int[]{2,3,3,0,3,3,0},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,2,3});
+		spell_list = new rune_object[4];
+		spell_list [0] = new rune_object(new int[]{2,3,3,0,3,3,0,3,3,2,1,2,2,3,3,0},rune_start_list,rune_body_array,rune_end_list,
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,5,9});
 		spell_list [0].make_rune_tiles();
 		spell_list [0].showhide_rune_tiles (true);
 		spell_list [0].enable_rune_tiles ();
 		spell_list [0].swap_rune(true,0);
-		/*
+
 		spell_list[1] = new rune_object(new int[]{3,3,3,0,3,3,0,3,0,3,2,3,0,0,1,1,0,3},rune_start_list,rune_body_array,rune_end_list,
 			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{3,15});
 		spell_list[1].make_rune_tiles();
@@ -354,7 +354,7 @@ public class rune_manager : MonoBehaviour {
 		spell_list[3].showhide_rune_tiles (false);
 		spell_list[3].enable_rune_tiles ();
 		spell_list[3].swap_rune(true,0);
-		*/
+
 
 
 		current_spell = 0;
@@ -417,9 +417,19 @@ public class rune_manager : MonoBehaviour {
 			//Debug.Log ("what");
 			switch (current_spell){
 			case 0:
-				GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireball_spell(direction_in);
+				switch (spell_list [current_spell].get_completed ()) {
+				case 1:
+					GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireball_spell (direction_in);
+					break;
+				case 2:
+					GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_firebomb_spell (direction_in);
+					break;
+				case 3:
+					GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireorbit_spell (direction_in);
+					break;
+				}
 				break;
-
+					
 			}
 			spell_list [current_spell].reset_rune ();
 		}

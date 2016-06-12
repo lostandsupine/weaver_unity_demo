@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class spell_object : MonoBehaviour {
+public class fireball_spell_object : MonoBehaviour {
 	private float velocity;
 	private Vector3 direction;
 	private float max_time;
 	private float spawn_time;
-	private spell_object self_spell_object;
+	private fireball_spell_object self_spell_object;
 
 	void OnTriggerEnter2D(Collider2D coll){
 		if (coll.gameObject.tag != "spell"){
@@ -14,12 +14,11 @@ public class spell_object : MonoBehaviour {
 		}
 	}
 
-	public spell_object(float velocity_in, Vector3 direction_in, float max_time_in){
+	public fireball_spell_object(float velocity_in, Vector3 direction_in, float max_time_in){
 		velocity = velocity_in;
 		direction = direction_in;
 		max_time = max_time_in;
 		spawn_time = Time.time;
-
 	}
 
 	public void move_spell(Vector3 direction_in, float velocity_in){
@@ -34,8 +33,9 @@ public class spell_object : MonoBehaviour {
 	}
 
 	void Start(){
-		self_spell_object = new spell_object (8f, GameObject.Find("input_manager").GetComponent<input_manager>().get_direction(), 5f);
+		self_spell_object = new fireball_spell_object (8f, GameObject.Find("input_manager").GetComponent<input_manager>().get_direction(), 5f);
 
+		this.gameObject.layer = 8;
 		this.gameObject.AddComponent<SpriteRenderer> ();
 		this.gameObject.GetComponent<SpriteRenderer> ().sprite = GameObject.Find ("spell_manager").GetComponent<spell_manager> ().all_spell_sprites [0];
 
