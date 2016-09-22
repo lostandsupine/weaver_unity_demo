@@ -24,20 +24,14 @@ public class rune_object {
 		switch (direction_in){
 		case 0: 
 			return 2;
-			break;
 		case 1:
 			return 3;
-			break;
 		case 2:
 			return 0;
-			break;
 		case 3:
 			return 1;
-			break;
 		default:
 			return -1;
-			Debug.Log("can't flip this direction");
-			break;
 		}
 	}
 

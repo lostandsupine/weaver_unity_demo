@@ -12,7 +12,7 @@ public class soldier_enemy_object : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		sprite_list = GameObject.Find ("spawn_manager").GetComponent<spawn_manager> ().all_enemy_sprites;
-		self_enemy_object = new soldier_enemy_object ();
+		//self_enemy_object = new soldier_enemy_object ();
 
 		this.gameObject.layer = 9;
 		this.gameObject.AddComponent<SpriteRenderer> ();

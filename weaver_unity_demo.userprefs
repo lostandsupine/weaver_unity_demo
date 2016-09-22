@@ -1,16 +1,19 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\enemies\soldier_enemy_object.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Tiled2Unity\Scripts\Editor\TiledAssetPostProcessor.cs">
     <Files>
-      <File FileName="Assets\scripts\spawn_manager.cs" Line="12" Column="3" />
-      <File FileName="Assets\scripts\rune_manager.cs" Line="422" Column="84" />
-      <File FileName="Assets\scripts\spell_manager.cs" Line="7" Column="2" />
+      <File FileName="Assets\scripts\spawn_manager.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\rune_manager.cs" Line="35" Column="1" />
+      <File FileName="Assets\scripts\spell_manager.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\input_manager.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\leila_walk.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\leila_walk.cs" Line="26" Column="10" />
       <File FileName="Assets\scripts\map_collision_manager.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\CameraController.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\spells\fireball_spell_object.cs" Line="60" Column="2" />
-      <File FileName="Assets\scripts\enemies\soldier_enemy_object.cs" Line="27" Column="64" />
+      <File FileName="Assets\scripts\enemies\soldier_enemy_object.cs" Line="5" Column="30" />
+      <File FileName="Assets\scripts\spells\fireball_spell_object.cs" Line="57" Column="93" />
+      <File FileName="Assets\scripts\spells\firebomb_spell_object.cs" Line="18" Column="3" />
+      <File FileName="Assets\scripts\spells\fireorbit_spell_object.cs" Line="36" Column="23" />
+      <File FileName="Assets\Tiled2Unity\Scripts\Editor\TiledAssetPostProcessor.cs" Line="159" Column="68" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

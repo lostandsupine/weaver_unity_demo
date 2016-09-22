@@ -155,7 +155,8 @@ namespace Tiled2Unity
 #endif
 
                 // No probes
-                mr.useLightProbes = false;
+                //mr.useLightProbes = false;
+				mr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
 #if !T2U_USE_LEGACY_IMPORTER
                 mr.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
 #endif

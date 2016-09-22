@@ -6,7 +6,6 @@ public class firebomb_spell_object : MonoBehaviour {
 	private Vector3 direction;
 	private float max_time;
 	private float spawn_time;
-	private firebomb_spell_object self_spell_object;
 
 	void OnTriggerEnter2D(Collider2D coll){
 		if (coll.gameObject.tag != "spell"){
@@ -14,26 +13,22 @@ public class firebomb_spell_object : MonoBehaviour {
 		}
 	}
 
-	public firebomb_spell_object(float velocity_in, Vector3 direction_in, float max_time_in){
-		velocity = velocity_in;
-		direction = direction_in;
-		max_time = max_time_in;
-		spawn_time = Time.time;
-	}
-
 	public void move_spell(Vector3 direction_in, float velocity_in){
 		this.gameObject.transform.Translate (direction_in * velocity_in * Time.deltaTime);
 	}
 	public void move_spell_default(){
-		this.gameObject.transform.Translate (this.self_spell_object.direction.normalized * this.self_spell_object.velocity * Time.deltaTime);
+		this.gameObject.transform.Translate (this.direction.normalized * this.velocity * Time.deltaTime);
 	}
 
 	public bool spell_timeout(){
-		return ((Time.time - this.self_spell_object.spawn_time) > this.self_spell_object.max_time);
+		return ((Time.time - this.spawn_time) > this.max_time);
 	}
 
 	void Start(){
-		self_spell_object = new firebomb_spell_object (4f, GameObject.Find("input_manager").GetComponent<input_manager>().get_direction(), 15f);
+		this.velocity = 4f;
+		this.direction = GameObject.Find ("input_manager").GetComponent<input_manager> ().get_direction ();
+		this.spawn_time = Time.time;
+		this.max_time = 15f;
 
 		this.gameObject.layer = 8;
 		this.gameObject.AddComponent<SpriteRenderer> ();
@@ -46,7 +41,7 @@ public class firebomb_spell_object : MonoBehaviour {
 		this.gameObject.GetComponent<Rigidbody2D> ().isKinematic = true;
 
 		this.gameObject.transform.rotation = Quaternion.Euler(0,0,0);
-		this.gameObject.transform.position = GameObject.Find ("leila").transform.position + (this.self_spell_object.direction * 2);
+		this.gameObject.transform.position = GameObject.Find ("leila").transform.position + (this.direction * 2);
 
 		this.gameObject.transform.localScale = new Vector3 (4, 4, 4);
 	}
