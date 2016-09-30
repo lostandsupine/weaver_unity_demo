@@ -1,21 +1,21 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\path_finder.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\enemies\soldier_enemy_object.cs">
     <Files>
       <File FileName="Assets\scripts\spawn_manager.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\rune_manager.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\rune_manager.cs" Line="172" Column="38" />
       <File FileName="Assets\scripts\spell_manager.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\input_manager.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\leila_walk.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\input_manager.cs" Line="60" Column="98" />
+      <File FileName="Assets\scripts\leila_walk.cs" Line="64" Column="3" />
       <File FileName="Assets\scripts\map_collision_manager.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\CameraController.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\enemies\soldier_enemy_object.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\enemies\soldier_enemy_object.cs" Line="99" Column="42" />
       <File FileName="Assets\scripts\spells\fireball_spell_object.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\spells\firebomb_spell_object.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\spells\fireorbit_spell_object.cs" Line="1" Column="1" />
       <File FileName="Assets\Tiled2Unity\Scripts\Editor\TiledAssetPostProcessor.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\csv_reader.cs" Line="7" Column="4" />
-      <File FileName="Assets\scripts\path_finder.cs" Line="12" Column="14" />
+      <File FileName="Assets\scripts\csv_reader.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\path_finder.cs" Line="12" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

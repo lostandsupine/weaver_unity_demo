@@ -7,9 +7,9 @@ public class path_finder : MonoBehaviour {
 
 	void Start () {
 		string[,] grid = csv_reader.SplitCsvGrid(csv_file.text);
-		Debug.Log("size = " + (1+ grid.GetUpperBound(0)) + "," + (1 + grid.GetUpperBound(1))); 
+		//Debug.Log("size = " + (1+ grid.GetUpperBound(0)) + "," + (1 + grid.GetUpperBound(1))); 
 
-		csv_reader.DebugOutputGrid(grid); 
+		//csv_reader.DebugOutputGrid(grid); 
 	}
 	
 	// Update is called once per frame
