@@ -3,16 +3,17 @@ using System.Collections;
 
 public class soldier_enemy_object : MonoBehaviour {
 	public Sprite[] sprite_list;
-	private soldier_enemy_object self_enemy_object;
 
-	private soldier_enemy_object (){
-
+	void OnTriggerEnter2D(Collider2D coll){
+		if (coll.gameObject.tag == "spell"){
+			GameObject.Destroy(this.gameObject);
+		}
 	}
+
 
 	// Use this for initialization
 	void Start () {
 		sprite_list = GameObject.Find ("spawn_manager").GetComponent<spawn_manager> ().all_enemy_sprites;
-		//self_enemy_object = new soldier_enemy_object ();
 
 		this.gameObject.layer = 9;
 		this.gameObject.AddComponent<SpriteRenderer> ();
@@ -33,9 +34,10 @@ public class soldier_enemy_object : MonoBehaviour {
 	int direction = 0;
 	int moving = 0;
 	int current_frame = 0;
+	float velocity = 3;
 
 	public void move_soldier(int in_direction, float velocity_in){
-		direction = in_direction;
+		//direction = in_direction;
 		moving = 1;
 		switch (in_direction) {
 		case 0:
@@ -54,7 +56,7 @@ public class soldier_enemy_object : MonoBehaviour {
 	}
 
 	public void translate_soldier(int in_direction, float velocity_in){
-		direction = in_direction;
+		//direction = in_direction;
 		switch (in_direction) {
 		case 0:
 			this.transform.Translate ((Vector3.down * velocity_in));
@@ -71,10 +73,33 @@ public class soldier_enemy_object : MonoBehaviour {
 		}
 	}
 
+	public void seek_player(){
+		Vector3 new_dir = this.transform.position - GameObject.Find ("leila").transform.position;
+		move_soldier (0, velocity * new_dir.normalized.y);
+		move_soldier (1, velocity * new_dir.normalized.x);
+
+		if (Mathf.Abs (new_dir.x) > Mathf.Abs (new_dir.y)) {
+			if (new_dir.x > 0) {
+				direction = 1;
+			} else {
+				direction = 3;
+			}
+		} else {
+			if (new_dir.y > 0) {
+				direction = 0;
+			} else {
+				direction = 2;
+			}
+		}
+	}
+
 	void Update () {
-		direction = (int)((Time.time / 1f) % 4);
-		move_soldier (direction, 2f);
+		//direction = (int)((Time.time / 1f) % 4);
+		//move_soldier (direction, 2f);
 		//this.transform.rotation = Quaternion.Euler (0, 0, 0);
+
+		seek_player ();
+
 		GetComponent<SpriteRenderer> ().flipX = false;
 
 		if (1 == moving) {

@@ -10,7 +10,7 @@ public class fireorbit_spell_object : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D coll){
 		if (coll.gameObject.tag != "spell"){
-			GameObject.Destroy(this.gameObject);
+			//GameObject.Destroy(this.gameObject);
 		}
 	}
 
