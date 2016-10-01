@@ -110,17 +110,17 @@ public class soldier_enemy_object : MonoBehaviour {
 				moving = 0;
 				break;
 			case 1:
-				GetComponent<SpriteRenderer> ().sprite = sprite_list [3 + current_frame];
+				GetComponent<SpriteRenderer> ().sprite = sprite_list [4 + current_frame];
 				current_frame = (int)((3 * Time.fixedTime) % 2);
 				moving = 0;
 				break;
 			case 2:
-				GetComponent<SpriteRenderer> ().sprite = sprite_list [6 + current_frame];
+				GetComponent<SpriteRenderer> ().sprite = sprite_list [7 + current_frame];
 				current_frame = (int)((3 * Time.fixedTime) % 2);
 				moving = 0;
 				break;
 			case 3:
-				GetComponent<SpriteRenderer> ().sprite = sprite_list [3 + current_frame];
+				GetComponent<SpriteRenderer> ().sprite = sprite_list [4 + current_frame];
 				GetComponent<SpriteRenderer> ().flipX = true;
 				//this.transform.rotation = Quaternion.Euler (0, 180, 0);
 				current_frame = (int)((3 * Time.fixedTime) % 2);

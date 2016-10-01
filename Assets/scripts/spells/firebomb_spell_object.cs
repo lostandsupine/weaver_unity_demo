@@ -25,14 +25,14 @@ public class firebomb_spell_object : MonoBehaviour {
 	}
 
 	void Start(){
-		this.velocity = 4f;
+		this.velocity = 2f;
 		this.direction = GameObject.Find ("input_manager").GetComponent<input_manager> ().get_direction ();
 		this.spawn_time = Time.time;
 		this.max_time = 15f;
 
 		this.gameObject.layer = 8;
 		this.gameObject.AddComponent<SpriteRenderer> ();
-		this.gameObject.GetComponent<SpriteRenderer> ().sprite = GameObject.Find ("spell_manager").GetComponent<spell_manager> ().all_spell_sprites [1];
+		this.gameObject.GetComponent<SpriteRenderer> ().sprite = GameObject.Find ("spell_manager").GetComponent<spell_manager> ().all_spell_sprites [0];
 
 		this.gameObject.AddComponent<BoxCollider2D> ();
 		this.gameObject.GetComponent<BoxCollider2D> ().isTrigger = true;
@@ -43,7 +43,7 @@ public class firebomb_spell_object : MonoBehaviour {
 		this.gameObject.transform.rotation = Quaternion.Euler(0,0,0);
 		this.gameObject.transform.position = GameObject.Find ("leila").transform.position + (this.direction * 2);
 
-		this.gameObject.transform.localScale = new Vector3 (4, 4, 4);
+		this.gameObject.transform.localScale = new Vector3 (6, 6, 6);
 	}
 	void FixedUpdate(){
 		if (spell_timeout()) {

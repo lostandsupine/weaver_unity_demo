@@ -2,17 +2,17 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\spells\firebomb_spell_object.cs">
     <Files>
-      <File FileName="Assets\scripts\spawn_manager.cs" Line="19" Column="60" />
-      <File FileName="Assets\scripts\rune_manager.cs" Line="172" Column="38" />
+      <File FileName="Assets\scripts\spawn_manager.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\rune_manager.cs" Line="43" Column="24" />
       <File FileName="Assets\scripts\spell_manager.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\input_manager.cs" Line="60" Column="31" />
-      <File FileName="Assets\scripts\leila_walk.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\input_manager.cs" Line="70" Column="70" />
+      <File FileName="Assets\scripts\leila_walk.cs" Line="18" Column="5" />
       <File FileName="Assets\scripts\map_collision_manager.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\CameraController.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\enemies\soldier_enemy_object.cs" Line="8" Column="28" />
-      <File FileName="Assets\scripts\spells\fireball_spell_object.cs" Line="13" Column="2" />
-      <File FileName="Assets\scripts\spells\firebomb_spell_object.cs" Line="12" Column="6" />
-      <File FileName="Assets\scripts\spells\fireorbit_spell_object.cs" Line="13" Column="6" />
+      <File FileName="Assets\scripts\enemies\soldier_enemy_object.cs" Line="118" Column="60" />
+      <File FileName="Assets\scripts\spells\fireball_spell_object.cs" Line="25" Column="95" />
+      <File FileName="Assets\scripts\spells\firebomb_spell_object.cs" Line="46" Column="62" />
+      <File FileName="Assets\scripts\spells\fireorbit_spell_object.cs" Line="33" Column="21" />
       <File FileName="Assets\Tiled2Unity\Scripts\Editor\TiledAssetPostProcessor.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\csv_reader.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\path_finder.cs" Line="1" Column="1" />

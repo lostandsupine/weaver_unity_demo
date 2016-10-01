@@ -56,13 +56,18 @@ public class input_manager : MonoBehaviour {
 				//GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (3,velocity);
 				move_x++;
 			}
-			if (move_x != 0 && move_y == 0){
+			if (move_x != 0 && move_y == 0) {
 				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (2 + (int)move_x, velocity);
-			} else if (move_x == 0 && move_y != 0){
+				GameObject.Find ("leila").GetComponent<leila_walk> ().moving = 1;
+			} else if (move_x == 0 && move_y != 0) {
 				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (1 + (int)move_y, velocity);
-			} else if (move_x != 0 && move_y != 0){
+				GameObject.Find ("leila").GetComponent<leila_walk> ().moving = 1;
+			} else if (move_x != 0 && move_y != 0) {
 				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (2 + (int)move_x, velocity / 1.414214f);
 				GameObject.Find ("leila").GetComponent<leila_walk> ().move_leila (1 + (int)move_y, velocity / 1.414214f);
+				GameObject.Find ("leila").GetComponent<leila_walk> ().moving = 1;
+			} else {
+				GameObject.Find ("leila").GetComponent<leila_walk> ().moving = 0;
 			}
 
 			current_direction = new Vector2 (move_x, move_y);

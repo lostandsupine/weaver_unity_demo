@@ -30,14 +30,14 @@ public class fireorbit_spell_object : MonoBehaviour {
 	}
 
 	void Start(){
-		this.velocity = 20f;
+		this.velocity = 15f;
 		this.direction = GameObject.Find ("input_manager").GetComponent<input_manager> ().get_direction ();
 		this.spawn_time = Time.time;
 		this.max_time = 15f;
 		this.gameObject.layer = 8;
 
 		this.gameObject.AddComponent<SpriteRenderer> ();
-		this.gameObject.GetComponent<SpriteRenderer> ().sprite = GameObject.Find ("spell_manager").GetComponent<spell_manager> ().all_spell_sprites [1];
+		this.gameObject.GetComponent<SpriteRenderer> ().sprite = GameObject.Find ("spell_manager").GetComponent<spell_manager> ().all_spell_sprites [0];
 
 		this.gameObject.AddComponent<BoxCollider2D> ();
 		this.gameObject.GetComponent<BoxCollider2D> ().isTrigger = true;
