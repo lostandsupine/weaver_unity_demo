@@ -54,6 +54,7 @@
      <Compile Include="Assets\scripts\NewBehaviourScript.cs" />
      <Compile Include="Assets\scripts\csv_reader.cs" />
      <Compile Include="Assets\scripts\enemies\soldier_enemy_object.cs" />
+     <Compile Include="Assets\scripts\game_over_script.cs" />
      <Compile Include="Assets\scripts\input_manager.cs" />
      <Compile Include="Assets\scripts\leia_down_collider.cs" />
      <Compile Include="Assets\scripts\leia_left_collider.cs" />

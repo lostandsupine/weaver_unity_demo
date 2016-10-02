@@ -1,10 +1,10 @@
-Initialize engine version: 5.3.0f4 (2524e04062b4)
+Initialize engine version: 5.4.1f1 (649f48bbbf0f)
 GfxDevice: creating device client; threaded=1
 Direct3D:
     Version:  Direct3D 11.0 [level 11.0]
     Renderer: Intel(R) HD Graphics 520 (ID=0x1916)
     Vendor:   Intel
-    VRAM:     128 MB
+    VRAM:     2111 MB
 Begin MonoManager ReloadAssembly
 Platform assembly: C:\Users\aarn\Desktop\weaver_unity_demo\test1_Data\Managed\UnityEngine.dll (this message is harmless)
 Loading C:\Users\aarn\Desktop\weaver_unity_demo\test1_Data\Managed\UnityEngine.dll into Unity Child Domain
@@ -14,13 +14,17 @@ Platform assembly: C:\Users\aarn\Desktop\weaver_unity_demo\test1_Data\Managed\Un
 Loading C:\Users\aarn\Desktop\weaver_unity_demo\test1_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\aarn\Desktop\weaver_unity_demo\test1_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\aarn\Desktop\weaver_unity_demo\test1_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.109 seconds
+- Completed reload, in  0.174 seconds
 Platform assembly: C:\Users\aarn\Desktop\weaver_unity_demo\test1_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\aarn\Desktop\weaver_unity_demo\test1_Data\Managed\System.dll (this message is harmless)
 desktop: 2736x1824 60Hz; virtual: 2736x1824 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.650667 ms
+UnloadTime: 0.816408 ms
+exiting
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 1288 -> priority: 1 
+  Thread -> id: 1950 -> priority: 1 

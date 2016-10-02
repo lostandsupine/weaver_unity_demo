@@ -9,6 +9,14 @@ public class leila_walk : MonoBehaviour {
 	public int moving = 0;
 	int current_frame = 0;
 
+
+	void OnCollisionEnter2D(Collision2D coll){
+		if (coll.gameObject.tag == "enemy"){
+			GameObject.Find ("game_over_text").GetComponent<game_over_script> ().game_over ();
+		}
+	}
+		
+
 	void Start () {
 	
 	}

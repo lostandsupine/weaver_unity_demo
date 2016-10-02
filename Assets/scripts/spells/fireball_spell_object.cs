@@ -24,7 +24,7 @@ public class fireball_spell_object : MonoBehaviour {
 			impact_time = Time.time;
 			this.transform.Translate (this.direction.normalized * this.sprite_list [0].bounds.max.x * 3f);
 			this.transform.Rotate (new Vector3 (0f, 0f, this.direction_angle));
-			Debug.Log (this.sprite_list [0].bounds.max.x);
+
 		}
 	}
 
