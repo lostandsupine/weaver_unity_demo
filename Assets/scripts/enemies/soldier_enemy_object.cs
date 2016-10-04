@@ -3,11 +3,33 @@ using System.Collections;
 
 public class soldier_enemy_object : MonoBehaviour {
 	public Sprite[] sprite_list;
+	int direction = 0;
+	int moving = 0;
+	int current_frame = 0;
+	float velocity = 3;
+	enum alive_state_enum {alive = 0, burning = 1, dead = 2};
+	alive_state_enum alive_state = alive_state_enum.alive;
+	float dead_time = 2f;
+	float dying_time;
 
 	void OnTriggerEnter2D(Collider2D coll){
 		if (coll.gameObject.tag == "spell"){
-			GameObject.Destroy(this.gameObject);
+			burn ();
 		}
+	}
+
+	private void burn(){
+		this.dying_time = Time.time;
+		this.alive_state = alive_state_enum.burning;
+		this.gameObject.GetComponent<SpriteRenderer> ().sprite = sprite_list [9];
+	}
+	private void kill (){
+		this.gameObject.GetComponent<SpriteRenderer> ().sprite = sprite_list [10];
+		this.gameObject.GetComponent<Rigidbody2D> ().isKinematic = true;
+		this.gameObject.GetComponent<BoxCollider2D> ().enabled = false;
+		this.gameObject.transform.rotation = Quaternion.Euler(0,0,(float)Random.Range(-90,90));
+		this.alive_state = alive_state_enum.dead;
+		this.transform.Translate (new Vector3 (0, 0, 0.5f));
 	}
 
 
@@ -30,11 +52,6 @@ public class soldier_enemy_object : MonoBehaviour {
 		this.gameObject.transform.rotation = Quaternion.Euler(0,0,0);
 		this.gameObject.transform.localScale = new Vector3 (2, 2, 2);
 	}
-
-	int direction = 0;
-	int moving = 0;
-	int current_frame = 0;
-	float velocity = 3;
 
 	public void move_soldier(int in_direction, float velocity_in){
 		//direction = in_direction;
@@ -94,47 +111,49 @@ public class soldier_enemy_object : MonoBehaviour {
 	}
 
 	void Update () {
-		//direction = (int)((Time.time / 1f) % 4);
-		//move_soldier (direction, 2f);
-		//this.transform.rotation = Quaternion.Euler (0, 0, 0);
-
-		seek_player ();
-
-		GetComponent<SpriteRenderer> ().flipX = false;
-
-		if (1 == moving) {
-			switch (direction) {
-			case 0:
-				GetComponent<SpriteRenderer> ().sprite = sprite_list [1 + current_frame];
-				current_frame = (int)((3 * Time.fixedTime) % 2);
-				moving = 0;
-				break;
-			case 1:
-				GetComponent<SpriteRenderer> ().sprite = sprite_list [4 + current_frame];
-				current_frame = (int)((3 * Time.fixedTime) % 2);
-				moving = 0;
-				break;
-			case 2:
-				GetComponent<SpriteRenderer> ().sprite = sprite_list [7 + current_frame];
-				current_frame = (int)((3 * Time.fixedTime) % 2);
-				moving = 0;
-				break;
-			case 3:
-				GetComponent<SpriteRenderer> ().sprite = sprite_list [4 + current_frame];
-				GetComponent<SpriteRenderer> ().flipX = true;
+		if (alive_state == alive_state_enum.alive) {
+			seek_player ();
+			GetComponent<SpriteRenderer> ().flipX = false;
+			if (1 == moving) {
+				switch (direction) {
+				case 0:
+					GetComponent<SpriteRenderer> ().sprite = sprite_list [1 + current_frame];
+					current_frame = (int)((3 * Time.fixedTime) % 2);
+					moving = 0;
+					break;
+				case 1:
+					GetComponent<SpriteRenderer> ().sprite = sprite_list [4 + current_frame];
+					current_frame = (int)((3 * Time.fixedTime) % 2);
+					moving = 0;
+					break;
+				case 2:
+					GetComponent<SpriteRenderer> ().sprite = sprite_list [7 + current_frame];
+					current_frame = (int)((3 * Time.fixedTime) % 2);
+					moving = 0;
+					break;
+				case 3:
+					GetComponent<SpriteRenderer> ().sprite = sprite_list [4 + current_frame];
+					GetComponent<SpriteRenderer> ().flipX = true;
 				//this.transform.rotation = Quaternion.Euler (0, 180, 0);
-				current_frame = (int)((3 * Time.fixedTime) % 2);
-				moving = 0;
-				break;
-			}
+					current_frame = (int)((3 * Time.fixedTime) % 2);
+					moving = 0;
+					break;
+				}
 
+			} else {
+				switch (direction) {
+				case 0:
+					GetComponent<SpriteRenderer> ().sprite = sprite_list [0];
+					break;
+				}
+
+			}
 		} else {
-			switch (direction) {
-			case 0:
-				GetComponent<SpriteRenderer> ().sprite = sprite_list [0];
-				break;
+			if (alive_state == alive_state_enum.burning & (Time.time - this.dying_time) > this.dead_time) {
+				kill ();
+			} else if (alive_state == alive_state_enum.burning) {
+				this.transform.Translate (new Vector2(Random.Range(-1,1),Random.Range(-1,1)) * Time.deltaTime);
 			}
-
 		}
 	}
 }
