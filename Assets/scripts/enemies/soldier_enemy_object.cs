@@ -6,7 +6,7 @@ public class soldier_enemy_object : MonoBehaviour {
 	int sprite_direction = 0;
 	int moving = 0;
 	int current_frame = 0;
-	float vision_distance = 10f;
+
 	enum alive_state_enum {alive = 0, burning = 1, dead = 2};
 	alive_state_enum alive_state = alive_state_enum.alive;
 	float dead_time = 2f;
@@ -28,11 +28,35 @@ public class soldier_enemy_object : MonoBehaviour {
 	Vector2 wander_direction;
 	float wander_speed = 1f;
 	float approach_speed = 5f;
+	float approach_distance = 5f;
+	float vision_distance = 10f;
+	float prepare_end_time;
+	float prepare_start_time;
+	float prepare_distance_buffer = 0.5f;
+	float charge_speed = 8f;
+	float prepare_distance_unique;
+	float flank_speed = 7f;
+	float flank_probability;
+	float flank_start_time;
+	float flank_end_time;
+	int flank_clockwise;
 
 	// Use this for initialization
 	void Start () {
 		wander_switch_time = 0f;
 		wander_start_time = Time.time;
+		prepare_end_time = Random.Range (1f, 5f);
+		prepare_start_time = Time.time;
+		prepare_distance_unique = Random.Range (-2f, 2f);
+		approach_distance += prepare_distance_unique;
+		flank_probability = Random.Range (0f, 1f);
+		flank_end_time = Random.Range (1f, 5f);
+		if (Random.Range (0f, 1f) > 0.5f) {
+			flank_clockwise = 1;
+		} else {
+			flank_clockwise = -1;
+		}
+
 		sprite_list = GameObject.Find ("spawn_manager").GetComponent<spawn_manager> ().all_enemy_sprites;
 
 		this.gameObject.layer = 9;
@@ -84,25 +108,81 @@ public class soldier_enemy_object : MonoBehaviour {
 				ai_state = ai_state_enum.approaching;
 			}
 			break;
+		case ai_state_enum.approaching:
+			if (distance_to_player () <= approach_distance) {
+				if (flank_probability < 0.5) {
+					ai_state = ai_state_enum.preparing;
+					prepare_start_time = Time.time;
+				} else {
+					ai_state = ai_state_enum.flanking;
+					flank_start_time = Time.time;
+				}
+			}
+			break;
+		case ai_state_enum.preparing:
+			if ((Time.time - prepare_start_time) >= prepare_end_time) {
+				ai_state = ai_state_enum.charging;
+			}
+			break;
+		case ai_state_enum.flanking:
+			if ((Time.time - flank_start_time) >= flank_end_time) {
+				ai_state = ai_state_enum.charging;
+			}
+			break;
 		}
+	}
+	private Vector2 rotate_vector(Vector2 vector_in, float angle_in){
+		return(new Vector2 (vector_in.x * Mathf.Cos (angle_in) + vector_in.y * Mathf.Sin (angle_in), -vector_in.x * Mathf.Sin (angle_in) + vector_in.y * Mathf.Cos (angle_in)));
 	}
 
 	private void ai_action(){
 		
 		switch (ai_state){
-			case ai_state_enum.wandering:
-				if ((Time.time - wander_start_time) >= wander_switch_time) {
-					wander_start_time = Time.time;
-					wander_switch_time = Random.Range (1f, 10f);
-					wander_direction = new Vector2 (Random.Range (-1f, 1f), Random.Range (-1f, 1f));
-					sprite_direction = get_sprite_direction (wander_direction);
-				}
-				this.transform.Translate (wander_direction.normalized * wander_speed * Time.deltaTime);
-				break;
+		case ai_state_enum.wandering:
+			if ((Time.time - wander_start_time) >= wander_switch_time) {
+				wander_start_time = Time.time;
+				wander_switch_time = Random.Range (1f, 10f);
+				wander_direction = new Vector2 (Random.Range (-1f, 1f), Random.Range (-1f, 1f));
+				sprite_direction = get_sprite_direction (wander_direction);
+			}
+			this.transform.Translate (wander_direction.normalized * wander_speed * Time.deltaTime);
+			break;
 		case ai_state_enum.approaching:
 			wander_direction = GameObject.Find ("leila").transform.position - this.transform.position;
 			sprite_direction = get_sprite_direction (wander_direction);
 			this.transform.Translate (wander_direction.normalized * approach_speed * Time.deltaTime);
+			break;
+		case ai_state_enum.preparing:
+			if (Mathf.Abs (distance_to_player () - approach_distance) > prepare_distance_buffer) {
+				if (distance_to_player () < approach_distance) {
+					wander_direction = GameObject.Find ("leila").transform.position - this.transform.position;
+					sprite_direction = get_sprite_direction (wander_direction);
+					this.transform.Translate (-1 * wander_direction.normalized * approach_speed * Time.deltaTime);
+				} else if (distance_to_player () > approach_distance) {
+					wander_direction = GameObject.Find ("leila").transform.position - this.transform.position;
+					sprite_direction = get_sprite_direction (wander_direction);
+					this.transform.Translate (wander_direction.normalized * approach_speed * Time.deltaTime);
+				}
+			}
+			break;
+		case ai_state_enum.flanking:
+			Debug.Log ("flanking");
+			if (distance_to_player () < approach_distance) {
+				wander_direction = GameObject.Find ("leila").transform.position - this.transform.position;
+				sprite_direction = get_sprite_direction (wander_direction);
+				wander_direction = rotate_vector (wander_direction, Mathf.PI / 2 * flank_clockwise);
+				this.transform.Translate (-1 * wander_direction.normalized * flank_speed * Time.deltaTime);
+			} else if (distance_to_player () > approach_distance) {
+				wander_direction = GameObject.Find ("leila").transform.position - this.transform.position;
+				sprite_direction = get_sprite_direction (wander_direction);
+				wander_direction = rotate_vector (wander_direction, Mathf.PI / 2 * flank_clockwise);
+				this.transform.Translate (wander_direction.normalized * flank_speed * Time.deltaTime);
+			}
+			break;
+		case ai_state_enum.charging:
+			wander_direction = GameObject.Find ("leila").transform.position - this.transform.position;
+			sprite_direction = get_sprite_direction (wander_direction);
+			this.transform.Translate (wander_direction.normalized * charge_speed * Time.deltaTime);
 			break;
 		}
 	}
