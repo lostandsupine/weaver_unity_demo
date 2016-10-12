@@ -35,11 +35,12 @@ public class soldier_enemy_object : MonoBehaviour {
 	float prepare_distance_buffer = 0.5f;
 	float charge_speed = 8f;
 	float prepare_distance_unique;
-	float flank_speed = 7f;
+	float flank_speed = 5f;
 	float flank_probability;
 	float flank_start_time;
 	float flank_end_time;
 	int flank_clockwise;
+	float flank_distance = 10f;
 
 	// Use this for initialization
 	void Start () {
@@ -126,7 +127,11 @@ public class soldier_enemy_object : MonoBehaviour {
 			break;
 		case ai_state_enum.flanking:
 			if ((Time.time - flank_start_time) >= flank_end_time) {
-				ai_state = ai_state_enum.charging;
+				if (distance_to_player () > flank_distance) {
+					ai_state = ai_state_enum.approaching;
+				} else {
+					ai_state = ai_state_enum.charging;
+				}
 			}
 			break;
 		}
@@ -166,16 +171,15 @@ public class soldier_enemy_object : MonoBehaviour {
 			}
 			break;
 		case ai_state_enum.flanking:
-			Debug.Log ("flanking");
 			if (distance_to_player () < approach_distance) {
 				wander_direction = GameObject.Find ("leila").transform.position - this.transform.position;
 				sprite_direction = get_sprite_direction (wander_direction);
 				wander_direction = rotate_vector (wander_direction, Mathf.PI / 2 * flank_clockwise);
-				this.transform.Translate (-1 * wander_direction.normalized * flank_speed * Time.deltaTime);
+				this.transform.Translate (wander_direction.normalized * flank_speed * Time.deltaTime);
 			} else if (distance_to_player () > approach_distance) {
 				wander_direction = GameObject.Find ("leila").transform.position - this.transform.position;
 				sprite_direction = get_sprite_direction (wander_direction);
-				wander_direction = rotate_vector (wander_direction, Mathf.PI / 2 * flank_clockwise);
+				wander_direction = rotate_vector (wander_direction, Mathf.PI / 3 * flank_clockwise);
 				this.transform.Translate (wander_direction.normalized * flank_speed * Time.deltaTime);
 			}
 			break;

@@ -7,6 +7,7 @@ public class rune_object {
 	private int[] path_list;
 	private float[,] position_list;
 	private int[] rune_words;
+	public bool[] channelled;
 	private float[] adjustment;
 	//private int[,] spell_list;
 	public GameObject[] rune_obj_list;
@@ -18,7 +19,11 @@ public class rune_object {
 	private bool completed;
 	private int part_complete;
 	private Vector3 rune_center = GameObject.Find ("rune_manager").transform.position;
-
+	public bool channelling = false;
+	private float channel_degrade_time;
+	public enum spell_names_enum {fireball=0,firebomb=1, fireorbit=2};
+	private spell_names_enum[] spell_names_list;
+	private spell_names_enum channelling_which_spell;
 
 	private int flip(int direction_in){
 		switch (direction_in){
@@ -37,7 +42,7 @@ public class rune_object {
 
 	public rune_object(int[] path_list_in,Sprite[] rune_start_list,Sprite[,] rune_body_array,Sprite[] rune_end_list,
 		Sprite[] rune_complete_start_list,Sprite[,] rune_complete_body_array,Sprite[] rune_complete_end_list, 
-		int[] rune_words_in){
+		int[] rune_words_in, bool[] channelled_list_in,spell_names_enum[] spell_names_list_in){
 
 		this.path_list = path_list_in;
 		this.rune_sprite_list = new Sprite[this.path_list.Length+1];
@@ -45,6 +50,8 @@ public class rune_object {
 		this.position_list = new float[this.path_list.Length+1,2];
 		this.rune_obj_list = new GameObject[this.path_list.Length+1];
 		this.show_runes = false;
+		this.channelled = channelled_list_in;
+		this.spell_names_list = spell_names_list_in;
 
 		this.rune_sprite_list[0] = rune_start_list[path_list_in[0]];
 		this.rune_complete_sprite_list[0] = rune_complete_start_list[path_list_in[0]];
@@ -53,6 +60,7 @@ public class rune_object {
 
 		this.current_incomplete_rune = 1;
 		this.degrade_time = 2f;
+		this.channel_degrade_time = 1f;
 		this.completed = false;
 
 		float[] adjustment = new float[2];
@@ -220,6 +228,7 @@ public class rune_object {
 			swap_rune (true, this.current_incomplete_rune);
 			this.current_incomplete_rune = Mathf.Min(this.current_incomplete_rune + 1, this.path_list.Length+1);
 			this.degrade_time = Mathf.Min(this.degrade_time + 1f,2f);
+			this.channel_degrade_time = Mathf.Min(this.degrade_time + 0.5f,1f);
 
 			if (this.current_incomplete_rune < this.rune_words.Length) {
 				if (this.rune_words [this.current_incomplete_rune - 1] < this.rune_words [this.current_incomplete_rune]) {
@@ -246,21 +255,47 @@ public class rune_object {
 	}
 	public void degrade_rune(float time_in){
 		//Debug.Log ("degrade rune check");
-		this.degrade_time = this.degrade_time - time_in;
-		if (this.degrade_time <= 0f) {
-			if (this.completed){
-				//Debug.Log ("fully degrading completed rune");
-				this.reset_rune ();
-				this.completed = false;
-				this.degrade_time = 2f;
-			} else {
+		if (this.channelling) {
+			this.channel_degrade_time = this.channel_degrade_time - time_in;
+			if (this.channel_degrade_time <= 0f) {
 				//Debug.Log ("degrading rune");
+				if (this.current_incomplete_rune == 1) {
+					end_channelled_spell ();
+				}
 				this.unmark_rune ();
 				this.completed = false;
-				this.degrade_time = 2f;
+				this.channel_degrade_time = 1f;
+			}
+		} else {
+			this.degrade_time = this.degrade_time - time_in;
+			if (this.degrade_time <= 0f) {
+				if (this.completed) {
+					//Debug.Log ("fully degrading completed rune");
+					this.reset_rune ();
+					this.completed = false;
+					this.degrade_time = 2f;
+				} else {
+					//Debug.Log ("degrading rune");
+					this.unmark_rune ();
+					this.completed = false;
+					this.degrade_time = 2f;
+				}
 			}
 		}
 	}
+	public void end_channelled_spell(){
+		this.channelling = false;
+		switch (this.channelling_which_spell) {
+		case spell_names_enum.fireball:
+			break;
+		case spell_names_enum.firebomb:
+			break;
+		case spell_names_enum.fireorbit:
+			GameObject.Find ("fireorbit").GetComponent<fireorbit_spell_object> ().end_channelled_spell ();
+			break;
+		}
+	}
+
 	public void reset_rune(){
 		//Debug.Log ("resetting rune");
 		this.current_incomplete_rune = 1;
@@ -268,6 +303,20 @@ public class rune_object {
 		this.part_complete = 0;
 		for (int i = 1; i < this.rune_obj_list.Length; i++) {
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];
+		}
+	}
+	public void cast_spell(Vector2 direction_in){
+		switch (spell_names_list[get_completed()-1]) {
+		case spell_names_enum.fireball:
+			GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireball_spell (direction_in);
+			break;
+		case spell_names_enum.firebomb:
+			GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_firebomb_spell (direction_in);
+			break;
+		case spell_names_enum.fireorbit:
+			GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireorbit_spell (direction_in);
+			this.channelling_which_spell = spell_names_enum.fireorbit;
+			break;
 		}
 	}
 }
@@ -322,34 +371,40 @@ public class rune_manager : MonoBehaviour {
 
 		spell_list = new rune_object[4];
 		spell_list [0] = new rune_object(new int[]{2,3,3,0,3,3,0,3,3,2,1,2,2,3,3,0},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,5,9});
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,5,9}, 
+			new bool[]{false,false,true},
+			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.fireball,rune_object.spell_names_enum.firebomb,rune_object.spell_names_enum.fireorbit});
 		spell_list [0].make_rune_tiles();
 		spell_list [0].showhide_rune_tiles (true);
 		spell_list [0].enable_rune_tiles ();
 		spell_list [0].swap_rune(true,0);
 
 		spell_list[1] = new rune_object(new int[]{3,3,3,0,3,3,0,3,0,3,2,3,0,0,1,1,0,3},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{3,15});
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{3,15},
+			new bool[]{false,false},
+			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.fireball,rune_object.spell_names_enum.firebomb});
 		spell_list[1].make_rune_tiles();
 		spell_list[1].showhide_rune_tiles (false);
 		spell_list[1].enable_rune_tiles ();
 		spell_list[1].swap_rune(true,0);
 
 		spell_list[2] = new rune_object(new int[]{0,0,0,0,3,0,0,3,2},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,3,4});
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,3,4},
+			new bool[]{false,false,true},
+			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.fireball,rune_object.spell_names_enum.firebomb,rune_object.spell_names_enum.fireorbit});
 		spell_list[2].make_rune_tiles();
 		spell_list[2].showhide_rune_tiles (false);
 		spell_list[2].enable_rune_tiles ();
 		spell_list[2].swap_rune(true,0);
 
 		spell_list[3] = new rune_object(new int[]{3,2,3,3,0,0,0,0,1,1,0},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{5,6});
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{5,6},
+			new bool[]{false,false},
+			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.fireball,rune_object.spell_names_enum.firebomb});
 		spell_list[3].make_rune_tiles();
 		spell_list[3].showhide_rune_tiles (false);
 		spell_list[3].enable_rune_tiles ();
 		spell_list[3].swap_rune(true,0);
-
-
 
 		current_spell = 0;
 	}
@@ -407,9 +462,9 @@ public class rune_manager : MonoBehaviour {
 	}
 
 	public void cast_spell(Vector2 direction_in){
-		if (spell_list[current_spell].get_completed()>0) {
+		if (spell_list[current_spell].get_completed()>0 & !spell_list[current_spell].channelling) {
 			//Debug.Log ("what");
-			switch (current_spell){
+			/*switch (current_spell){
 			case 0:
 				switch (spell_list [current_spell].get_completed ()) {
 				case 1:
@@ -423,9 +478,14 @@ public class rune_manager : MonoBehaviour {
 					break;
 				}
 				break;
-					
+			
+			}*/
+			spell_list [current_spell].cast_spell (direction_in);
+			if (spell_list [current_spell].channelled [spell_list [current_spell].get_completed () - 1]) {
+				spell_list [current_spell].channelling = true;
+			} else {
+				spell_list [current_spell].reset_rune ();
 			}
-			spell_list [current_spell].reset_rune ();
 		}
 	}
 		

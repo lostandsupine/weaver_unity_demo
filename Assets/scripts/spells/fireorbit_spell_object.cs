@@ -14,6 +14,10 @@ public class fireorbit_spell_object : MonoBehaviour {
 		}
 	}
 
+	public void end_channelled_spell(){
+		GameObject.Destroy(this.gameObject);
+	}
+
 		
 	public void move_spell_default(){
 		
@@ -26,7 +30,8 @@ public class fireorbit_spell_object : MonoBehaviour {
 	}
 
 	public bool spell_timeout(){
-		return ((Time.time - this.spawn_time) > this.max_time);
+		return false;
+		//return ((Time.time - this.spawn_time) > this.max_time);
 	}
 
 	void Start(){
@@ -52,9 +57,9 @@ public class fireorbit_spell_object : MonoBehaviour {
 		this.gameObject.transform.localScale = new Vector3 (3, 3, 3);
 	}
 	void FixedUpdate(){
-		if (spell_timeout()) {
+		/*if (spell_timeout()) {
 			GameObject.Destroy (this.gameObject);
-		}
+		}*/
 		move_spell_default();
 	}
 
