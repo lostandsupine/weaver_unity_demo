@@ -4,6 +4,7 @@ using System.Collections;
 public class rune_object {
 	public Sprite[] rune_sprite_list;
 	public Sprite[] rune_complete_sprite_list;
+	public Sprite[] rune_channelled_sprite_list;
 	private int[] path_list;
 	private float[,] position_list;
 	private int[] rune_words;
@@ -42,11 +43,13 @@ public class rune_object {
 
 	public rune_object(int[] path_list_in,Sprite[] rune_start_list,Sprite[,] rune_body_array,Sprite[] rune_end_list,
 		Sprite[] rune_complete_start_list,Sprite[,] rune_complete_body_array,Sprite[] rune_complete_end_list, 
+		Sprite[] rune_channelled_start_list,Sprite[,] rune_channelled_body_array,Sprite[] rune_channelled_end_list, 
 		int[] rune_words_in, bool[] channelled_list_in,spell_names_enum[] spell_names_list_in){
 
 		this.path_list = path_list_in;
 		this.rune_sprite_list = new Sprite[this.path_list.Length+1];
 		this.rune_complete_sprite_list = new Sprite[this.path_list.Length+1];
+		this.rune_channelled_sprite_list = new Sprite[this.path_list.Length+1];
 		this.position_list = new float[this.path_list.Length+1,2];
 		this.rune_obj_list = new GameObject[this.path_list.Length+1];
 		this.show_runes = false;
@@ -55,6 +58,8 @@ public class rune_object {
 
 		this.rune_sprite_list[0] = rune_start_list[path_list_in[0]];
 		this.rune_complete_sprite_list[0] = rune_complete_start_list[path_list_in[0]];
+		this.rune_channelled_sprite_list[0] = rune_channelled_start_list[path_list_in[0]];
+
 		this.position_list[0,0] = 0f;
 		this.position_list[0,1] = 0f;
 
@@ -89,11 +94,13 @@ public class rune_object {
 			if (i == (this.path_list.Length)){
 				this.rune_sprite_list[i] = rune_end_list[path_list_in[i-1]];
 				this.rune_complete_sprite_list[i] = rune_complete_end_list[path_list_in[i-1]];
+				this.rune_channelled_sprite_list[i] = rune_channelled_end_list[path_list_in[i-1]];
 
 			} else {
 				//Debug.Log(i.ToString() + flip(path_list_in[i-1]).ToString() + path_list_in[i].ToString());
 				this.rune_sprite_list[i] = rune_body_array[flip(path_list_in[i-1]),path_list_in[i]];
 				this.rune_complete_sprite_list[i] = rune_complete_body_array[flip(path_list_in[i-1]),path_list_in[i]];
+				this.rune_channelled_sprite_list[i] = rune_channelled_body_array[flip(path_list_in[i-1]),path_list_in[i]];
 
 			}
 
@@ -213,7 +220,11 @@ public class rune_object {
 	public void swap_rune(bool p_complete,int i){
 		if (p_complete){
 			//Debug.Log ("swapping rune");
-			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_complete_sprite_list[i];
+			if (this.channelling) {
+				this.rune_obj_list [i].GetComponent<SpriteRenderer> ().sprite = this.rune_channelled_sprite_list [i];
+			} else {
+				this.rune_obj_list [i].GetComponent<SpriteRenderer> ().sprite = this.rune_complete_sprite_list [i];
+			}
 		} else {
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];					
 		}
@@ -285,6 +296,7 @@ public class rune_object {
 	}
 	public void end_channelled_spell(){
 		this.channelling = false;
+		this.rune_obj_list[0].GetComponent<SpriteRenderer> ().sprite = this.rune_complete_sprite_list[0];
 		switch (this.channelling_which_spell) {
 		case spell_names_enum.fireball:
 			break;
@@ -295,7 +307,6 @@ public class rune_object {
 			break;
 		}
 	}
-
 	public void reset_rune(){
 		//Debug.Log ("resetting rune");
 		this.current_incomplete_rune = 1;
@@ -303,6 +314,11 @@ public class rune_object {
 		this.part_complete = 0;
 		for (int i = 1; i < this.rune_obj_list.Length; i++) {
 			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_sprite_list[i];
+		}
+	}
+	public void channel_rune(){
+		for (int i = 0; i < this.rune_obj_list.Length; i++) {
+			this.rune_obj_list[i].GetComponent<SpriteRenderer> ().sprite = this.rune_channelled_sprite_list[i];
 		}
 	}
 	public void cast_spell(Vector2 direction_in){
@@ -330,8 +346,13 @@ public class rune_manager : MonoBehaviour {
 	public Sprite[] rune_complete_body_list;
 	public Sprite[] rune_complete_end_list;
 
+	public Sprite[] rune_channelled_start_list;
+	public Sprite[] rune_channelled_body_list;
+	public Sprite[] rune_channelled_end_list;
+
 	public Sprite[,] rune_body_array;
 	public Sprite[,] rune_complete_body_array;
+	public Sprite[,] rune_channelled_body_array;
 	public rune_object the_rune;
 	//public rune_object the_rune2;
 	//private float num_rune_keys_pressed = 0;
@@ -369,9 +390,25 @@ public class rune_manager : MonoBehaviour {
 		rune_complete_body_array[3,1] = rune_complete_body_list[10];
 		rune_complete_body_array[3,2] = rune_complete_body_list[11];
 
+		rune_channelled_body_array = new Sprite[4,4];
+		rune_channelled_body_array[0,1] = rune_channelled_body_list[0];
+		rune_channelled_body_array[0,2] = rune_channelled_body_list[1];
+		rune_channelled_body_array[0,3] = rune_channelled_body_list[2];
+		rune_channelled_body_array[1,0] = rune_channelled_body_list[3];
+		rune_channelled_body_array[1,2] = rune_channelled_body_list[4];
+		rune_channelled_body_array[1,3] = rune_channelled_body_list[5];
+		rune_channelled_body_array[2,0] = rune_channelled_body_list[6];
+		rune_channelled_body_array[2,1] = rune_channelled_body_list[7];
+		rune_channelled_body_array[2,3] = rune_channelled_body_list[8];
+		rune_channelled_body_array[3,0] = rune_channelled_body_list[9];
+		rune_channelled_body_array[3,1] = rune_channelled_body_list[10];
+		rune_channelled_body_array[3,2] = rune_channelled_body_list[11];
+
 		spell_list = new rune_object[4];
 		spell_list [0] = new rune_object(new int[]{2,3,3,0,3,3,0,3,3,2,1,2,2,3,3,0},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,5,9}, 
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, 
+			rune_channelled_start_list,rune_channelled_body_array,rune_channelled_end_list,
+			new int[]{2,5,9}, 
 			new bool[]{false,false,true},
 			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.fireball,rune_object.spell_names_enum.firebomb,rune_object.spell_names_enum.fireorbit});
 		spell_list [0].make_rune_tiles();
@@ -380,7 +417,9 @@ public class rune_manager : MonoBehaviour {
 		spell_list [0].swap_rune(true,0);
 
 		spell_list[1] = new rune_object(new int[]{3,3,3,0,3,3,0,3,0,3,2,3,0,0,1,1,0,3},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{3,15},
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, 
+			rune_channelled_start_list,rune_channelled_body_array,rune_channelled_end_list,
+			new int[]{3,15},
 			new bool[]{false,false},
 			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.fireball,rune_object.spell_names_enum.firebomb});
 		spell_list[1].make_rune_tiles();
@@ -389,7 +428,9 @@ public class rune_manager : MonoBehaviour {
 		spell_list[1].swap_rune(true,0);
 
 		spell_list[2] = new rune_object(new int[]{0,0,0,0,3,0,0,3,2},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{2,3,4},
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, 
+			rune_channelled_start_list,rune_channelled_body_array,rune_channelled_end_list,
+			new int[]{2,3,4},
 			new bool[]{false,false,true},
 			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.fireball,rune_object.spell_names_enum.firebomb,rune_object.spell_names_enum.fireorbit});
 		spell_list[2].make_rune_tiles();
@@ -398,7 +439,9 @@ public class rune_manager : MonoBehaviour {
 		spell_list[2].swap_rune(true,0);
 
 		spell_list[3] = new rune_object(new int[]{3,2,3,3,0,0,0,0,1,1,0},rune_start_list,rune_body_array,rune_end_list,
-			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, new int[]{5,6},
+			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, 
+			rune_channelled_start_list,rune_channelled_body_array,rune_channelled_end_list,
+			new int[]{5,6},
 			new bool[]{false,false},
 			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.fireball,rune_object.spell_names_enum.firebomb});
 		spell_list[3].make_rune_tiles();
@@ -483,6 +526,7 @@ public class rune_manager : MonoBehaviour {
 			spell_list [current_spell].cast_spell (direction_in);
 			if (spell_list [current_spell].channelled [spell_list [current_spell].get_completed () - 1]) {
 				spell_list [current_spell].channelling = true;
+				spell_list [current_spell].channel_rune ();
 			} else {
 				spell_list [current_spell].reset_rune ();
 			}
