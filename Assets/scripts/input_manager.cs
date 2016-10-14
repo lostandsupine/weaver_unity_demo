@@ -118,12 +118,12 @@ public class input_manager : MonoBehaviour {
 			if (Input.GetKey (KeyCode.Alpha2) || Input.GetAxis ("Horizontal2") == -1) {
 				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().change_spell (1);
 			}
-			if (Input.GetKey (KeyCode.Alpha3) || Input.GetAxis ("Vertical2") == 1) {
+			/*if (Input.GetKey (KeyCode.Alpha3) || Input.GetAxis ("Vertical2") == 1) {
 				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().change_spell (2);
 			}
 			if (Input.GetKey (KeyCode.Alpha4) || Input.GetAxis ("Horizontal2") == 1) {
 				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().change_spell (3);
-			}
+			}*/
 			
 			if ((Input.GetKey (KeyCode.Tab) || Input.GetKey (KeyCode.JoystickButton4)) && !tab_down) {
 				GameObject.Find ("rune_manager").GetComponent<rune_manager> ().next_spell (-1);

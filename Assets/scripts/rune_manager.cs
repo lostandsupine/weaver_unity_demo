@@ -335,6 +335,9 @@ public class rune_object {
 			break;
 		}
 	}
+	public float get_percent_complete(){
+		return ((float)this.current_incomplete_rune-1f) / ((float)this.rune_sprite_list.Length-1f);
+	}
 }
 
 public class rune_manager : MonoBehaviour {
@@ -404,7 +407,7 @@ public class rune_manager : MonoBehaviour {
 		rune_channelled_body_array[3,1] = rune_channelled_body_list[10];
 		rune_channelled_body_array[3,2] = rune_channelled_body_list[11];
 
-		spell_list = new rune_object[4];
+		spell_list = new rune_object[2];
 		spell_list [0] = new rune_object(new int[]{2,3,3,0,3,3,0,3,3,2,1,2,2,3,3,0},rune_start_list,rune_body_array,rune_end_list,
 			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, 
 			rune_channelled_start_list,rune_channelled_body_array,rune_channelled_end_list,
@@ -427,7 +430,7 @@ public class rune_manager : MonoBehaviour {
 		spell_list[1].enable_rune_tiles ();
 		spell_list[1].swap_rune(true,0);
 
-		spell_list[2] = new rune_object(new int[]{0,0,0,0,3,0,0,3,2},rune_start_list,rune_body_array,rune_end_list,
+		/*spell_list[2] = new rune_object(new int[]{0,0,0,0,3,0,0,3,2},rune_start_list,rune_body_array,rune_end_list,
 			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, 
 			rune_channelled_start_list,rune_channelled_body_array,rune_channelled_end_list,
 			new int[]{2,3,4},
@@ -447,7 +450,7 @@ public class rune_manager : MonoBehaviour {
 		spell_list[3].make_rune_tiles();
 		spell_list[3].showhide_rune_tiles (false);
 		spell_list[3].enable_rune_tiles ();
-		spell_list[3].swap_rune(true,0);
+		spell_list[3].swap_rune(true,0);*/
 
 		current_spell = 0;
 	}
@@ -506,23 +509,7 @@ public class rune_manager : MonoBehaviour {
 
 	public void cast_spell(Vector2 direction_in){
 		if (spell_list[current_spell].get_completed()>0 & !spell_list[current_spell].channelling) {
-			//Debug.Log ("what");
-			/*switch (current_spell){
-			case 0:
-				switch (spell_list [current_spell].get_completed ()) {
-				case 1:
-					GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireball_spell (direction_in);
-					break;
-				case 2:
-					GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_firebomb_spell (direction_in);
-					break;
-				case 3:
-					GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireorbit_spell (direction_in);
-					break;
-				}
-				break;
-			
-			}*/
+
 			spell_list [current_spell].cast_spell (direction_in);
 			if (spell_list [current_spell].channelled [spell_list [current_spell].get_completed () - 1]) {
 				spell_list [current_spell].channelling = true;
@@ -531,6 +518,13 @@ public class rune_manager : MonoBehaviour {
 				spell_list [current_spell].reset_rune ();
 			}
 		}
+	}
+
+	public float get_percent_complete(int spell_in){
+		return spell_list [spell_in].get_percent_complete ();
+	}
+	public bool is_channelling(int spell_in){
+		return spell_list [spell_in].channelling;
 	}
 		
 	void Update () {

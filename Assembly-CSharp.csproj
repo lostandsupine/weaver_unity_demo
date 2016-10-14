@@ -69,6 +69,7 @@
      <Compile Include="Assets\scripts\spells\fireball_spell_object.cs" />
      <Compile Include="Assets\scripts\spells\firebomb_spell_object.cs" />
      <Compile Include="Assets\scripts\spells\fireorbit_spell_object.cs" />
+     <Compile Include="Assets\spell_progress_hud.cs" />
      <None Include="Assets\Tiled2Unity\Shaders\shaDefault.shader" />
      <None Include="Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
