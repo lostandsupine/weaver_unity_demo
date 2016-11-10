@@ -23,6 +23,17 @@ public class spell_manager : MonoBehaviour {
 		new_fireorbit.tag = "spell";
 		new_fireorbit.AddComponent<fireorbit_spell_object> ();
 	}
+	public void make_lightningbolt_spell(Vector2 direction_in){
+		GameObject new_lightningbolt = new GameObject ("lightningbolt");
+		new_lightningbolt.tag = "spell";
+		new_lightningbolt.AddComponent<lightningbolt_spell_object> ();
+	}
+	public void make_chainlightning_spell(Vector2 direction_in){
+		GameObject new_chainlightning = new GameObject ("chainlightning");
+		new_chainlightning.tag = "spell";
+		new_chainlightning.AddComponent<chainlightning_spell_object> ();
+		new_chainlightning.GetComponent<chainlightning_spell_object> ().chain_number = 0;
+	}
 
 	// Use this for initialization
 	void Start () {

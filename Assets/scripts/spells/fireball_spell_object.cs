@@ -60,7 +60,7 @@ public class fireball_spell_object : MonoBehaviour {
 		if (this.direction.y >= 0) {
 			this.direction_angle = Vector2.Angle (new Vector2 (1f, 0f), this.direction) - 90f;
 		} else {
-			this.direction_angle = 90f + Vector2.Angle (new Vector2 (1f, 0f), this.direction);
+			this.direction_angle = Vector2.Angle (new Vector2 (-1f, 0f), this.direction) + 90f;
 		}
 
 		this.sprite_list = new Sprite [2];
@@ -79,7 +79,7 @@ public class fireball_spell_object : MonoBehaviour {
 		this.gameObject.GetComponent<Rigidbody2D> ().isKinematic = true;
 
 		this.gameObject.transform.rotation = Quaternion.Euler(0,0,0);
-		this.gameObject.transform.position = GameObject.Find ("leila").transform.position + (this.direction * 1);
+		this.gameObject.transform.position = GameObject.Find ("leila").transform.position + (this.direction.normalized * 1);
 
 		this.gameObject.transform.localScale = new Vector3 (2, 2, 2);
 	}

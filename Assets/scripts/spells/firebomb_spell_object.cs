@@ -41,7 +41,7 @@ public class firebomb_spell_object : MonoBehaviour {
 		this.gameObject.GetComponent<Rigidbody2D> ().isKinematic = true;
 
 		this.gameObject.transform.rotation = Quaternion.Euler(0,0,0);
-		this.gameObject.transform.position = GameObject.Find ("leila").transform.position + (this.direction * 2);
+		this.gameObject.transform.position = GameObject.Find ("leila").transform.position + (this.direction.normalized * 2);
 
 		this.gameObject.transform.localScale = new Vector3 (6, 6, 6);
 	}

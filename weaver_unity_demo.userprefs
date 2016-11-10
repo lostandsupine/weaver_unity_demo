@@ -1,15 +1,17 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\rune_manager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\spells\chainlightning_spell_object.cs">
     <Files>
       <File FileName="Assets\scripts\spawn_manager.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\rune_manager.cs" Line="410" Column="33" />
-      <File FileName="Assets\scripts\spell_manager.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\input_manager.cs" Line="126" Column="7" />
+      <File FileName="Assets\scripts\rune_manager.cs" Line="435" Column="125" />
+      <File FileName="Assets\scripts\spell_manager.cs" Line="35" Column="84" />
+      <File FileName="Assets\scripts\input_manager.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\leila_walk.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\map_collision_manager.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\CameraController.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\enemies\soldier_enemy_object.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\spells\lightningbolt_spell_object.cs" Line="10" Column="55" />
+      <File FileName="Assets\scripts\spells\chainlightning_spell_object.cs" Line="45" Column="2" />
       <File FileName="Assets\scripts\spells\fireball_spell_object.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\spells\firebomb_spell_object.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\spells\fireorbit_spell_object.cs" Line="1" Column="1" />
@@ -17,7 +19,7 @@
       <File FileName="Assets\scripts\csv_reader.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\path_finder.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\game_over_script.cs" Line="1" Column="1" />
-      <File FileName="Assets\spell_progress_hud.cs" Line="26" Column="153" />
+      <File FileName="Assets\spell_progress_hud.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

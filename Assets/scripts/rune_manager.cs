@@ -22,7 +22,7 @@ public class rune_object {
 	private Vector3 rune_center = GameObject.Find ("rune_manager").transform.position;
 	public bool channelling = false;
 	private float channel_degrade_time;
-	public enum spell_names_enum {fireball=0,firebomb=1, fireorbit=2};
+	public enum spell_names_enum {fireball=0,firebomb=1, fireorbit=2, lightningbolt=3,chainlightning=4};
 	private spell_names_enum[] spell_names_list;
 	private spell_names_enum channelling_which_spell;
 
@@ -305,6 +305,8 @@ public class rune_object {
 		case spell_names_enum.fireorbit:
 			GameObject.Find ("fireorbit").GetComponent<fireorbit_spell_object> ().end_channelled_spell ();
 			break;
+		case spell_names_enum.lightningbolt:
+			break;
 		}
 	}
 	public void reset_rune(){
@@ -332,6 +334,12 @@ public class rune_object {
 		case spell_names_enum.fireorbit:
 			GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_fireorbit_spell (direction_in);
 			this.channelling_which_spell = spell_names_enum.fireorbit;
+			break;
+		case spell_names_enum.lightningbolt:
+			GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_lightningbolt_spell (direction_in);
+			break;
+		case spell_names_enum.chainlightning:
+			GameObject.Find ("spell_manager").GetComponent<spell_manager> ().make_chainlightning_spell (direction_in);
 			break;
 		}
 	}
@@ -422,9 +430,9 @@ public class rune_manager : MonoBehaviour {
 		spell_list[1] = new rune_object(new int[]{3,3,3,0,3,3,0,3,0,3,2,3,0,0,1,1,0,3},rune_start_list,rune_body_array,rune_end_list,
 			rune_complete_start_list,rune_complete_body_array,rune_complete_end_list, 
 			rune_channelled_start_list,rune_channelled_body_array,rune_channelled_end_list,
-			new int[]{3,15},
+			new int[]{3,5,10},
 			new bool[]{false,false},
-			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.fireball,rune_object.spell_names_enum.firebomb});
+			new rune_object.spell_names_enum[]{rune_object.spell_names_enum.lightningbolt,rune_object.spell_names_enum.chainlightning,rune_object.spell_names_enum.firebomb});
 		spell_list[1].make_rune_tiles();
 		spell_list[1].showhide_rune_tiles (false);
 		spell_list[1].enable_rune_tiles ();
